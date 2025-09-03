@@ -16,6 +16,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "db:generate": "bun run with-env drizzle-kit generate",
     "db:push": "bun run with-env drizzle-kit push",
     "db:studio": "bun run with-env drizzle-kit studio",
     "dev": "tsc --watch",

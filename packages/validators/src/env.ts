@@ -1,31 +1,38 @@
 import * as z from 'zod/v4-mini'
 
-export const env = createEnv({
-  server: {
-    NODE_ENV: z._default(
-      z.enum(['development', 'production', 'test']),
-      'development',
-    ),
-    DATABASE_URL: z.string(),
-    AUTH_DISCORD_ID: z.string(),
-    AUTH_DISCORD_SECRET: z.string(),
+export const env = createEnv(
+  {
+    server: {
+      NODE_ENV: z._default(
+        z.enum(['development', 'production', 'test']),
+        'development',
+      ),
 
-    // Vercel environment variables
-    VERCEL: z.optional(z.string()),
-    VERCEL_ENV: z.optional(z.enum(['production', 'preview', 'development'])),
-    VERCEL_URL: z.optional(z.string()),
-    VERCEL_PROJECT_PRODUCTION_URL: z.optional(z.string()),
+      POSTGRES_USER: z.string(),
+      POSTGRES_PASSWORD: z.string(),
+      POSTGRES_DB: z.string(),
+      POSTGRES_HOST: z._default(z.string(), 'localhost:5432'),
+
+      // Vercel environment variables
+      VERCEL: z.optional(z.string()),
+      VERCEL_ENV: z.optional(z.enum(['production', 'preview', 'development'])),
+      VERCEL_URL: z.optional(z.string()),
+      VERCEL_PROJECT_PRODUCTION_URL: z.optional(z.string()),
+    },
+
+    client: {},
+
+    runtimeEnv: process.env,
+
+    skipValidation:
+      !!process.env.SKIP_ENV_VALIDATION ||
+      !!process.env.CI ||
+      process.env.npm_lifecycle_event === 'lint',
   },
-
-  client: {},
-
-  runtimeEnv: process.env,
-
-  skipValidation:
-    !!process.env.SKIP_ENV_VALIDATION ||
-    !!process.env.CI ||
-    process.env.npm_lifecycle_event === 'lint',
-})
+  (env) => ({
+    DATABASE_URL: `postgresql://${env.POSTGRES_USER}:${env.POSTGRES_PASSWORD}@${env.POSTGRES_HOST}/${env.POSTGRES_DB}`,
+  }),
+)
 
 function createEnv<
   TPrefix extends 'NEXT_PUBLIC_',

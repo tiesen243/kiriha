@@ -1,10 +1,8 @@
 import { and, db, eq } from '@attendify/db'
 import { accounts, sessions, users } from '@attendify/db/schema'
-import { env } from '@attendify/validators/env'
 
 import type { AuthOptions } from './core/types'
 import { encodeHex, hashSecret } from './core/crypto'
-import Discord from './providers/discord'
 
 const adapter = getAdapter()
 export const authOptions = {
@@ -13,12 +11,7 @@ export const authOptions = {
     expiresIn: 60 * 60 * 24 * 30, // 30 days
     expiresThreshold: 60 * 60 * 24 * 7, // 7 days
   },
-  providers: {
-    discord: new Discord({
-      clientId: env.AUTH_DISCORD_ID ?? '',
-      clientSecret: env.AUTH_DISCORD_SECRET ?? '',
-    }),
-  },
+  providers: {},
 } satisfies AuthOptions
 
 export type Providers = keyof typeof authOptions.providers
