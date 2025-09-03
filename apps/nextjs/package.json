@@ -1,0 +1,44 @@
+{
+  "name": "@attendify/nextjs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun run with-env next build",
+    "clean": "git clean -xdf .cache .next .turbo node_modules",
+    "dev": "bun run with-env next dev --turbopack",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "bun with-env next typegen && eslint",
+    "start": "bun run with-env next start",
+    "typecheck": "bun with-env next typegen && tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "prettier": "@attendify/prettier-config",
+  "dependencies": {
+    "@attendify/api": "workspace:*",
+    "@attendify/auth": "workspace:*",
+    "@attendify/db": "workspace:*",
+    "@attendify/ui": "workspace:*",
+    "@attendify/validators": "workspace:*",
+    "@tanstack/react-query": "catalog:api",
+    "@trpc/client": "catalog:api",
+    "@trpc/tanstack-react-query": "catalog:api",
+    "next": "^15.5.2",
+    "react": "catalog:react",
+    "react-dom": "catalog:react"
+  },
+  "devDependencies": {
+    "@attendify/eslint-config": "workspace:*",
+    "@attendify/prettier-config": "workspace:*",
+    "@attendify/tsconfig": "workspace:*",
+    "@tailwindcss/postcss": "catalog:tailwind",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "dotenv-cli": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "tailwindcss": "catalog:tailwind",
+    "typescript": "catalog:"
+  }
+}

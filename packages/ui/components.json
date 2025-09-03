@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "tsx": true,
+  "rsc": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/tailwind.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@attendify/ui",
+    "hooks": "@attendify/ui/hooks",
+    "lib": "@attendify/ui/lib",
+    "utils": "@attendify/ui",
+    "ui": "@attendify/ui/components"
+  },
+  "iconLibrary": "lucide"
+}
