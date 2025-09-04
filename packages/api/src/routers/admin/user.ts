@@ -6,8 +6,8 @@ import { students, teachers, users } from '@attendify/db/schema'
 import {
   allSchema,
   byIdSchema,
-  createUserSchema,
-  updateUserSchema,
+  createSchema,
+  updateSchema,
 } from '@attendify/validators/admin/user'
 
 import { adminProcedure } from '../../trpc'
@@ -18,17 +18,7 @@ export const adminUserRouter = {
       ? or(ilike(users.name, input.search), ilike(users.email, input.search))
       : undefined
     const usersList = await ctx.db
-      .select({
-        id: users.id,
-        cardId: users.cardId,
-        studentId: students.id,
-        teacherId: teachers.id,
-        role: users.role,
-        name: users.name,
-        email: users.email,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
-      })
+      .select(userSelect)
       .from(users)
       .where(whereClause)
       .leftJoin(students, eq(students.userId, users.id))
@@ -49,17 +39,7 @@ export const adminUserRouter = {
 
   byId: adminProcedure.input(byIdSchema).query(async ({ ctx, input }) => {
     const [user] = await ctx.db
-      .select({
-        id: users.id,
-        cardId: users.cardId,
-        studentId: students.id,
-        teacherId: teachers.id,
-        role: users.role,
-        name: users.name,
-        email: users.email,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
-      })
+      .select(userSelect)
       .from(users)
       .where(eq(users.id, input.id))
       .leftJoin(students, eq(students.userId, users.id))
@@ -71,7 +51,7 @@ export const adminUserRouter = {
   }),
 
   create: adminProcedure
-    .input(createUserSchema)
+    .input(createSchema)
     .mutation(async ({ ctx, input }) => {
       const [newUser] = await ctx.db
         .insert(users)
@@ -91,10 +71,24 @@ export const adminUserRouter = {
     }),
 
   update: adminProcedure
-    .input(updateUserSchema)
+    .input(updateSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input
       await ctx.db.update(users).set(data).where(eq(users.id, id))
       return { success: true }
     }),
 } satisfies TRPCRouterRecord
+
+const userSelect = {
+  id: users.id,
+  cardId: users.cardId,
+  studentId: students.id,
+  teacherId: teachers.id,
+
+  role: users.role,
+  name: users.name,
+  email: users.email,
+
+  createdAt: users.createdAt,
+  updatedAt: users.updatedAt,
+}
