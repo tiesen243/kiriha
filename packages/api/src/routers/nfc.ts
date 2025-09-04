@@ -17,7 +17,7 @@ class NFCEventEmitter<T extends EventMap<T>> extends EventEmitter<T> {
   }
 }
 
-const ee = new NFCEventEmitter<{
+export const ee = new NFCEventEmitter<{
   scan: [cardId: string, roomId: string | undefined]
 }>()
 

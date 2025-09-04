@@ -13,6 +13,8 @@ export const env = createEnv(
       POSTGRES_DB: z.string(),
       POSTGRES_HOST: z._default(z.string(), 'localhost:5432'),
 
+      DEFAULT_PASSWORD: z.string(),
+
       // Vercel environment variables
       VERCEL: z.optional(z.string()),
       VERCEL_ENV: z.optional(z.enum(['production', 'preview', 'development'])),

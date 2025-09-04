@@ -1,11 +1,15 @@
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 
 import { createTRPCRouter, publicProcedure } from '../trpc'
-import { nfcRouter } from './nfc'
 
 const appRouter = createTRPCRouter({
   health: publicProcedure.query(() => ({ message: 'OK' })),
-  nfc: nfcRouter,
+
+  nfc: (await import('./nfc')).nfcRouter,
+
+  admin: {
+    user: (await import('./admin/user')).adminUserRouter,
+  },
 })
 
 type AppRouter = typeof appRouter

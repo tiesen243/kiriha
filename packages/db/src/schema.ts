@@ -43,10 +43,13 @@ export const users = pgTable('user', (t) => ({
     .primaryKey()
     .$defaultFn(() => generateId())
     .notNull(),
+  cardId: t.varchar({ length: 32 }).unique(),
+
   role: roleEnums().default('student'),
   name: t.varchar({ length: 255 }).notNull(),
-  email: t.varchar({ length: 320 }).unique().notNull(),
-  image: t.varchar({ length: 255 }).notNull(),
+
+  email: t.varchar({ length: 320 }).unique(),
+  image: t.varchar({ length: 255 }),
 
   createdAt,
   updatedAt,
