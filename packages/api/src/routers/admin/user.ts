@@ -12,11 +12,12 @@ import {
 
 import { adminProcedure } from '../../trpc'
 
-export const adminUserRouter = {
+export const userRouter = {
   all: adminProcedure.input(allSchema).query(async ({ ctx, input }) => {
     const whereClause = input.search
       ? or(ilike(users.name, input.search), ilike(users.email, input.search))
       : undefined
+
     const usersList = await ctx.db
       .select(userSelect)
       .from(users)
@@ -38,30 +39,36 @@ export const adminUserRouter = {
   }),
 
   byId: adminProcedure.input(byIdSchema).query(async ({ ctx, input }) => {
+    const { id } = input
+
     const [user] = await ctx.db
       .select(userSelect)
       .from(users)
-      .where(eq(users.id, input.id))
+      .where(eq(users.id, id))
       .leftJoin(students, eq(students.userId, users.id))
       .leftJoin(teachers, eq(teachers.userId, users.id))
       .limit(1)
     if (!user)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' })
+
     return user
   }),
 
   create: adminProcedure
     .input(createSchema)
     .mutation(async ({ ctx, input }) => {
+      const { name, cardId, role } = input
+
       const [newUser] = await ctx.db
         .insert(users)
-        .values({ name: input.name, cardId: input.cardId, role: input.role })
+        .values({ name, cardId, role })
         .returning({ id: users.id })
       if (!newUser)
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to create user',
         })
+
       if (input.role === 'student')
         await ctx.db.insert(students).values({ userId: newUser.id })
       else if (input.role === 'teacher')
@@ -74,9 +81,37 @@ export const adminUserRouter = {
     .input(updateSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input
-      await ctx.db.update(users).set(data).where(eq(users.id, id))
+
+      const numUpdatedRows = await ctx.db
+        .update(users)
+        .set(data)
+        .where(eq(users.id, id))
+      if (numUpdatedRows.length === 0)
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' })
+
       return { success: true }
     }),
+
+  delete: adminProcedure.input(byIdSchema).mutation(async ({ ctx, input }) => {
+    const { id } = input
+
+    const [user] = await ctx.db
+      .select()
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1)
+    if (!user)
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' })
+
+    if (user.role === 'student')
+      await ctx.db.delete(students).where(eq(students.userId, id))
+    else if (user.role === 'teacher')
+      await ctx.db.delete(teachers).where(eq(teachers.userId, id))
+
+    await ctx.db.delete(users).where(eq(users.id, id))
+
+    return { success: true }
+  }),
 } satisfies TRPCRouterRecord
 
 const userSelect = {

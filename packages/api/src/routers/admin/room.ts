@@ -7,6 +7,7 @@ import {
   allSchema,
   byIdSchema,
   createSchema,
+  updateSchema,
 } from '@attendify/validators/admin/room'
 
 import { adminProcedure } from '../../trpc'
@@ -61,4 +62,29 @@ export const roomRouter = {
 
       return { roomId: newRoom.id }
     }),
+
+  update: adminProcedure
+    .input(updateSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...data } = input
+      const numUpdatedRows = await ctx.db
+        .update(rooms)
+        .set(data)
+        .where(eq(rooms.id, id))
+        .returning({ id: rooms.id })
+      if (numUpdatedRows.length === 0)
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Room not found' })
+
+      return { roomId: id }
+    }),
+
+  delete: adminProcedure.input(byIdSchema).mutation(async ({ ctx, input }) => {
+    const numDeletedRows = await ctx.db
+      .delete(rooms)
+      .where(eq(rooms.id, input.id))
+      .returning({ id: rooms.id })
+    if (numDeletedRows.length === 0)
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Room not found' })
+    return { roomId: input.id }
+  }),
 } satisfies TRPCRouterRecord
