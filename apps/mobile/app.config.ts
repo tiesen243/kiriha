@@ -1,5 +1,6 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config'
 
+// @ts-ignore
 import packageJson from './package.json' with { type: 'json' }
 
 export default ({ config }: ConfigContext): ExpoConfig => ({

@@ -1,13 +1,13 @@
-import 'react-native-reanimated'
+import WebView from 'react-native-webview'
+import Constants from 'expo-constants'
 
-import { Stack } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
+import { getBaseUrl } from '@/lib/utils'
 
 export default function RootLayout() {
   return (
-    <>
-      <Stack />
-      <StatusBar style='dark' />
-    </>
+    <WebView
+      style={{ flex: 1, marginTop: Constants.statusBarHeight }}
+      source={{ uri: getBaseUrl() }}
+    />
   )
 }
