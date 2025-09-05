@@ -1,0 +1,29 @@
+{
+  "name": "@attendify/mobile",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "clean": "git clean -xdf .cache .expo .turbo android ios node_modules",
+    "dev": "expo start",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint"
+  },
+  "prettier": "@attendify/prettier-config",
+  "dependencies": {
+    "expo": "^54.0.0-preview.15",
+    "expo-router": "^6.0.0-preview.15",
+    "expo-splash-screen": "^31.0.8",
+    "expo-status-bar": "^3.0.7",
+    "react": "catalog:react",
+    "react-native": "^0.81.1",
+    "react-native-reanimated": "^4.1.0"
+  },
+  "devDependencies": {
+    "@attendify/eslint-config": "workspace:*",
+    "@attendify/prettier-config": "workspace:*",
+    "@attendify/tsconfig": "workspace:*",
+    "@types/react": "catalog:react"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "extends": "@attendify/tsconfig/next.json",
+  "compilerOptions": {
+    "jsx": "react-native",
+    "moduleSuffixes": [
+      ".ios",
+      ".android",
+      ".native",
+      ""
+    ]
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "package.json",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

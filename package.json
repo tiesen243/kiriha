@@ -17,7 +17,7 @@
       "react": {
         "@types/react": "^19.1.11",
         "@types/react-dom": "^19.1.7",
-        "react": "^19.1.1",
+        "react": "19.1.0",
         "react-dom": "^19.1.1"
       },
       "tailwind": {
@@ -40,6 +40,8 @@
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
     "dev": "turbo dev --continue",
+    "dev:web": "turbo dev --continue --filter=@attendify/web...",
+    "dev:mobile": "turbo dev --continue --filter=@attendify/mobile...",
     "format": "turbo run format --continue -- --cache --cache-location .cache/prettiercache",
     "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/prettiercache",
     "postinstall": "bun run lint:ws",
@@ -55,7 +57,7 @@
     "@turbo/gen": "^2.5.6",
     "turbo": "^2.5.6"
   },
-  "packageManager": "bun@1.2.19",
+  "packageManager": "bun@1.2.21",
   "engines": {
     "bun": ">=1.2.19",
     "node": ">=22.0.0"

@@ -23,6 +23,11 @@ app.config.timestamp_*.js
 # nitro
 .nitro/
 
+# expo 
+.expo/
+android/
+ios/
+
 # java
 /nbproject/private/
 /nbbuild/
