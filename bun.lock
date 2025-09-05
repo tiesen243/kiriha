@@ -43,6 +43,7 @@
         "next": "^15.5.2",
         "react": "catalog:react",
         "react-dom": "catalog:react",
+        "superjson": "catalog:api",
       },
       "devDependencies": {
         "@attendify/eslint-config": "workspace:*",
