@@ -1,4 +1,4 @@
-import * as z from 'zod/v4'
+import * as z from 'zod'
 
 export const scanSchema = z.object({
   cardId: z.string().min(1),

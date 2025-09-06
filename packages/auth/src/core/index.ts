@@ -1,3 +1,5 @@
+import type { LoginInput } from '@attendify/validators/auth'
+
 import type { Account, AuthOptions, OauthAccount, Session } from './types'
 import Cookies from './cookies'
 import {
@@ -62,13 +64,10 @@ export function Auth(opts: AuthOptions) {
     }
   }
 
-  async function signIn(opts: {
-    email: string
-    password: string
-  }): Promise<Session> {
-    const { email, password } = opts
+  async function signIn(opts: LoginInput): Promise<Session> {
+    const { indentifier, password } = opts
 
-    const user = await adapter.getUserByEmail(email)
+    const user = await adapter.getUserByIndentifier(indentifier)
     if (!user) throw new Error('Invalid credentials')
 
     const account = await adapter.getAccount('credentials', user.id)
@@ -95,7 +94,7 @@ export function Auth(opts: AuthOptions) {
     const existingAccount = await adapter.getAccount(provider, accountId)
     if (existingAccount) return createSession(existingAccount.userId)
 
-    const existingUser = await adapter.getUserByEmail(userData.email)
+    const existingUser = await adapter.getUserByIndentifier(userData.email)
     const userId =
       existingUser?.id ?? (await adapter.createUser(userData))?.id ?? ''
     if (!userId) throw new Error('Failed to create user')

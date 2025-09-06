@@ -56,7 +56,7 @@ function useForm<
   const formErrorRef = React.useRef<TError>(null)
   const [version, setVersion] = React.useState(0)
 
-  const [isPending, setIsPending] = React.useState(false)
+  const [isPending, startTransition] = React.useTransition()
 
   const validateField = React.useCallback(
     async <TKey extends keyof TValue>(
@@ -96,34 +96,36 @@ function useForm<
     [validator],
   )
 
-  const handleSubmit = React.useCallback(async () => {
-    if (isPending) return
+  const handleSubmit = React.useCallback(
+    (event: React.FormEvent) => {
+      startTransition(async () => {
+        event.preventDefault()
+        event.stopPropagation()
 
-    formDataRef.current = null
-    formErrorRef.current = null
+        formDataRef.current = null
+        formErrorRef.current = null
 
-    const validationResult = await validateField()
-    if (!validationResult.isValid) {
-      formErrorRef.current = { issues: validationResult.errors } as TError
-      return
-    }
+        const validationResult = await validateField()
+        if (!validationResult.isValid) {
+          formErrorRef.current = { issues: validationResult.errors } as TError
+          return
+        }
 
-    try {
-      setIsPending(true)
-
-      const result = await onSubmit(validationResult.data)
-      formDataRef.current = result
-      await onSuccess?.(result)
-    } catch (error) {
-      formDataRef.current = null
-      const message = error instanceof Error ? error.message : 'Unknown error'
-      formErrorRef.current = { message } as TError
-      await onError?.({ message } as TError)
-    } finally {
-      setIsPending(false)
-      setVersion((v) => v + 1)
-    }
-  }, [isPending, onError, onSubmit, onSuccess, validateField])
+        try {
+          const result = await onSubmit(validationResult.data)
+          formDataRef.current = result
+          await onSuccess?.(result)
+        } catch (error) {
+          formDataRef.current = null
+          const message =
+            error instanceof Error ? error.message : 'Unknown error'
+          formErrorRef.current = { message } as TError
+          await onError?.({ message } as TError)
+        }
+      })
+    },
+    [onError, onSubmit, onSuccess, validateField],
+  )
 
   const setValue = React.useCallback(
     <TKey extends keyof TValue>(key: TKey, value: TValue[TKey]) => {
@@ -386,7 +388,6 @@ function FormMessage({
 
 export {
   useForm,
-  useFormField,
   FormField,
   FormLabel,
   FormControl,

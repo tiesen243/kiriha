@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 
+import type { LoginInput } from '@attendify/validators/auth'
+
 import type { Providers } from './config'
 import type { SessionResult, User } from './core/types'
 
@@ -13,7 +15,7 @@ type SessionContextValue = {
   signIn: <TProvider extends AuthProviders>(
     provider: TProvider,
     ...args: TProvider extends 'credentials'
-      ? [{ email: string; password: string }]
+      ? [LoginInput]
       : [{ redirectUrl?: string }?]
   ) => Promise<void>
   signOut: (opts?: { redirectUrl: string }) => Promise<void>
@@ -71,7 +73,7 @@ function SessionProvider({
     async <TProvider extends AuthProviders>(
       provider: TProvider,
       ...args: TProvider extends 'credentials'
-        ? [{ email: string; password: string }]
+        ? [LoginInput]
         : [{ redirectUrl?: string }?]
     ): Promise<void> => {
       if (provider === 'credentials') {

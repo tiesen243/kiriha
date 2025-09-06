@@ -1,0 +1,31 @@
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
+
+import { auth } from '@attendify/auth'
+import { SidebarInset, SidebarProvider } from '@attendify/ui/sidebar'
+
+import { AdminSidebar } from '@/app/(admin)/_components/admin-sidebar'
+import { Header } from '@/app/(admin)/_components/header'
+
+export default async function AdminLayout({ children }: LayoutProps<'/'>) {
+  const session = await auth({ headers: await headers() })
+  if (session.user?.role !== 'admin') redirect('/')
+
+  return (
+    <SidebarProvider
+      style={
+        {
+          '--sidebar-width': 'calc(var(--spacing) * 72)',
+          '--header-height': 'calc(var(--spacing) * 12)',
+        } as React.CSSProperties
+      }
+    >
+      <AdminSidebar variant='inset' user={session.user} />
+
+      <SidebarInset>
+        <Header />
+        {children}
+      </SidebarInset>
+    </SidebarProvider>
+  )
+}

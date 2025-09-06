@@ -1,5 +1,11 @@
 import { and, db, eq } from '@attendify/db'
-import { accounts, sessions, users } from '@attendify/db/schema'
+import {
+  accounts,
+  sessions,
+  students,
+  teachers,
+  users,
+} from '@attendify/db/schema'
 
 import type { AuthOptions } from './core/types'
 import { encodeHex, hashSecret } from './core/crypto'
@@ -28,9 +34,31 @@ export async function invalidateSessionToken(token: string) {
 
 function getAdapter(): AuthOptions['adapter'] {
   return {
-    getUserByEmail: async (email) => {
-      const [user] = await db.select().from(users).where(eq(users.email, email))
-      return user ?? null
+    getUserByIndentifier: async (indentifier) => {
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, indentifier))
+        .limit(1)
+      if (user) return user
+
+      const [student] = await db
+        .select()
+        .from(students)
+        .where(eq(students.id, indentifier))
+        .limit(1)
+        .innerJoin(users, eq(students.userId, users.id))
+      if (student?.user) return student.user
+
+      const [teacher] = await db
+        .select()
+        .from(teachers)
+        .where(eq(teachers.id, indentifier))
+        .limit(1)
+        .innerJoin(users, eq(teachers.userId, users.id))
+      if (teacher?.user) return teacher.user
+
+      return null
     },
     createUser: async (data) => {
       const [user] = await db.insert(users).values(data).returning()
