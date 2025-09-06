@@ -14,7 +14,7 @@ CREATE TABLE "attendance" (
 	"class_id" varchar(24) NOT NULL,
 	"student_id" varchar(10) NOT NULL,
 	"status" "attendance_status" NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"note" varchar(500)
 );
 --> statement-breakpoint
@@ -27,7 +27,7 @@ CREATE TABLE "class_section" (
 	"date" date NOT NULL,
 	"start_time" time with time zone NOT NULL,
 	"end_time" time with time zone NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
@@ -41,7 +41,7 @@ CREATE TABLE "room" (
 	"id" varchar(24) PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"capacity" integer NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
@@ -61,8 +61,8 @@ CREATE TABLE "student" (
 CREATE TABLE "subject" (
 	"id" varchar(24) PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
-	"code" varchar(8) NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
+	"code" varchar(7) NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "subject_code_unique" UNIQUE("code")
 );
@@ -81,7 +81,7 @@ CREATE TABLE "user" (
 	"name" varchar(255) NOT NULL,
 	"email" varchar(320),
 	"image" varchar(255),
-	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "user_cardId_unique" UNIQUE("card_id"),
 	CONSTRAINT "user_email_unique" UNIQUE("email")

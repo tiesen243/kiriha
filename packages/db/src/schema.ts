@@ -27,7 +27,9 @@ export const attendanceStatusEnums = pgEnum('attendance_status', [
   'excused',
 ])
 
-const createdAt = timestamp().defaultNow().notNull()
+const createdAt = timestamp({ mode: 'date', withTimezone: true })
+  .defaultNow()
+  .notNull()
 const updatedAt = timestamp({ mode: 'date', withTimezone: true })
   .defaultNow()
   .$onUpdateFn(() => new Date())

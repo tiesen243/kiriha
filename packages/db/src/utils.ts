@@ -19,5 +19,5 @@ export function generateUserCode(): string {
 }
 
 export function generateSubjectCode(): string {
-  return String(Math.floor(Math.random() * 90000000) + 10000000)
+  return String(Math.floor(Math.random() * 9000000) + 1000000)
 }
