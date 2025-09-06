@@ -1,10 +1,17 @@
+import type { UrlObject } from 'node:url'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import type { User } from '@attendify/auth'
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@attendify/ui/collapsible'
+import {
   BookOpenIcon,
   Building2Icon,
+  ChevronRightIcon,
   GraduationCapIcon,
   HomeIcon,
   MonitorIcon,
@@ -17,10 +24,15 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from '@attendify/ui/sidebar'
 
 interface AdminSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -35,7 +47,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className='data-[slot=sidebar-menu-button]:!p-1.5'
+              className='hover:bg-transparent data-[slot=sidebar-menu-button]:!p-1.5'
             >
               <Link href='/admin'>
                 <Image
@@ -52,7 +64,55 @@ export function AdminSidebar(props: AdminSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent></SidebarContent>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent className='flex flex-col gap-2'>
+            <SidebarMenu>
+              {sidebarItems.map((item) =>
+                item.children ? (
+                  <Collapsible key={item.id} asChild>
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton tooltip={item.label}>
+                          <item.icon />
+                          <span>{item.label}</span>
+                          <ChevronRightIcon className='ml-auto transition-transform duration-200 group-data-[state=open]/menu-item:rotate-90' />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {item.children.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.id}>
+                              <SidebarMenuSubButton asChild>
+                                <Link
+                                  href={subItem.href as unknown as UrlObject}
+                                >
+                                  <subItem.icon />
+                                  <span>{subItem.label}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                ) : (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton asChild tooltip={item.label}>
+                      <Link href={item.href as unknown as UrlObject}>
+                        <item.icon />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ),
+              )}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
       <SidebarFooter></SidebarFooter>
     </Sidebar>
