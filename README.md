@@ -39,24 +39,18 @@ Attendify streamlines attendance management using modern web technologies and Io
 ## Getting Started
 
 1. **Clone the repository**
-
-```bash
-git clone git@github.com:tiesen243/attendify.git
-cd attendify
-```
-
+   ```bash
+   git clone git@github.com:tiesen243/attendify.git
+   cd attendify
+   ```
 2. **Install dependencies**
-
-```bash
-bun install
-```
-
+   ```bash
+   bun install
+   ```
 3. **Set up your environment variables**
-
-```bash
-cp .env.example .env
-```
-
+   ```bash
+   cp .env.example .env
+   ```
 4. **Set up the database**
    - Ensure you have Docker installed and running.
    - Start the PostgreSQL database using Docker Compose and run the database migrations:
@@ -69,13 +63,11 @@ cp .env.example .env
      bun run db:push
      ```
 5. Start the development server:
-
    ```bash
    bun run dev:web
    # or
    bun run dev:mobile
    ```
-
 6. **Hardware setup**
    - Refer to the Proteus schematic for correct pin connections between ESP8266 and RC522.
    - Configure WiFi and server info in `packages/firmware/config.cpp`:
