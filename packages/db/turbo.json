@@ -6,6 +6,9 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "db:generate": {
+      "outputs": ["drizzle/**"]
+    },
     "db:push": {
       "cache": false
     },

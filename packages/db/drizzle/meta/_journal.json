@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1756925425775,
-      "tag": "0000_fuzzy_deadpool",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1756985389479,
-      "tag": "0001_broad_leader",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1756985746406,
-      "tag": "0002_aromatic_ezekiel",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1756985909766,
-      "tag": "0003_curved_cargill",
+      "when": 1757157973517,
+      "tag": "0000_lowly_loki",
       "breakpoints": true
     }
   ]

@@ -50,41 +50,22 @@ export const roomRouter = {
   create: adminProcedure
     .input(createSchema)
     .mutation(async ({ ctx, input }) => {
-      const [newRoom] = await ctx.db
+      await ctx.db
         .insert(rooms)
         .values({ name: input.name, capacity: input.capacity })
-        .returning({ id: rooms.id })
-      if (!newRoom)
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to create room',
-        })
-
-      return { roomId: newRoom.id }
+      return { success: true }
     }),
 
   update: adminProcedure
     .input(updateSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input
-      const numUpdatedRows = await ctx.db
-        .update(rooms)
-        .set(data)
-        .where(eq(rooms.id, id))
-        .returning({ id: rooms.id })
-      if (numUpdatedRows.length === 0)
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Room not found' })
-
-      return { roomId: id }
+      await ctx.db.update(rooms).set(data).where(eq(rooms.id, id))
+      return { success: true }
     }),
 
   delete: adminProcedure.input(byIdSchema).mutation(async ({ ctx, input }) => {
-    const numDeletedRows = await ctx.db
-      .delete(rooms)
-      .where(eq(rooms.id, input.id))
-      .returning({ id: rooms.id })
-    if (numDeletedRows.length === 0)
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'Room not found' })
-    return { roomId: input.id }
+    await ctx.db.delete(rooms).where(eq(rooms.id, input.id))
+    return { success: true }
   }),
 } satisfies TRPCRouterRecord

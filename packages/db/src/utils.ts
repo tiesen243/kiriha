@@ -17,3 +17,7 @@ export function generateUserCode(): string {
     .padStart(6, '0')
   return yy + randomNum
 }
+
+export function generateSubjectCode(): string {
+  return String(Math.floor(Math.random() * 90000000) + 10000000)
+}

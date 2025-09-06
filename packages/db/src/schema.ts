@@ -8,7 +8,7 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/pg-core'
 
-import { generateId, generateUserCode } from './utils'
+import { generateId, generateSubjectCode, generateUserCode } from './utils'
 
 /**
  * ENUMS
@@ -82,7 +82,7 @@ export const students = pgTable(
       .unique()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
-    enrolledAt: createdAt,
+    enrolledAt: t.timestamp().defaultNow().notNull(),
   }),
   (t) => [index('student_userId_idx').on(t.userId)],
 )
@@ -105,7 +105,7 @@ export const teachers = pgTable(
       .unique()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
-    hiredAt: createdAt,
+    hiredAt: t.timestamp().defaultNow().notNull(),
   }),
   (t) => [index('teacher_userId_idx').on(t.userId)],
 )
@@ -191,7 +191,11 @@ export const subjects = pgTable('subject', (t) => ({
     .$defaultFn(() => generateId())
     .notNull(),
   name: t.varchar({ length: 255 }).notNull(),
-  code: t.varchar({ length: 8 }).unique().notNull(),
+  code: t
+    .varchar({ length: 7 })
+    .$defaultFn(() => generateSubjectCode())
+    .unique()
+    .notNull(),
   createdAt,
   updatedAt,
 }))
@@ -221,8 +225,11 @@ export const classes = pgTable(
       .notNull()
       .references(() => rooms.id, { onDelete: 'restrict' }),
     status: classStatusEnums().default('waiting').notNull(),
-    startTime: t.timestamp({ mode: 'date', withTimezone: true }).notNull(),
-    endTime: t.timestamp({ mode: 'date', withTimezone: true }).notNull(),
+
+    date: t.date({ mode: 'date' }).notNull(),
+    startTime: t.time({ withTimezone: true }).notNull(),
+    endTime: t.time({ withTimezone: true }).notNull(),
+
     createdAt,
     updatedAt,
   }),
@@ -258,7 +265,6 @@ export const enrollments = pgTable(
       .varchar({ length: 24 })
       .notNull()
       .references(() => classes.id, { onDelete: 'cascade' }),
-    enrolledAt: createdAt,
   }),
   (enrollment) => [
     primaryKey({ columns: [enrollment.studentId, enrollment.classId] }),

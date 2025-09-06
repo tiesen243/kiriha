@@ -74,21 +74,14 @@ export const userRouter = {
       else if (input.role === 'teacher')
         await ctx.db.insert(teachers).values({ userId: newUser.id })
 
-      return { id: newUser.id }
+      return { success: true, userId: newUser.id }
     }),
 
   update: adminProcedure
     .input(updateSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input
-
-      const numUpdatedRows = await ctx.db
-        .update(users)
-        .set(data)
-        .where(eq(users.id, id))
-      if (numUpdatedRows.length === 0)
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' })
-
+      await ctx.db.update(users).set(data).where(eq(users.id, id))
       return { success: true }
     }),
 
@@ -110,7 +103,7 @@ export const userRouter = {
 
     await ctx.db.delete(users).where(eq(users.id, id))
 
-    return { success: true }
+    return { success: true, userId: id }
   }),
 } satisfies TRPCRouterRecord
 

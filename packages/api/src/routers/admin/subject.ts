@@ -51,52 +51,22 @@ export const subjectRouter = {
   create: adminProcedure
     .input(createSchema)
     .mutation(async ({ ctx, input }) => {
-      const { name } = input
-      const code = generateSubjectCode(name)
-
-      const [newSubject] = await ctx.db
-        .insert(subjects)
-        .values({ name, code })
-        .returning({ id: subjects.id })
-      return newSubject
+      await ctx.db.insert(subjects).values({ name: input.name })
+      return { success: true }
     }),
 
   update: adminProcedure
     .input(updateSchema)
     .mutation(async ({ ctx, input }) => {
-      const { id, name } = input
-
-      const [currentSubject] = await ctx.db
-        .select({ name: subjects.name, code: subjects.code })
-        .from(subjects)
-        .where(eq(subjects.id, id))
-        .limit(1)
-      if (!currentSubject)
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Subject not found' })
-
-      if (name && name !== currentSubject.name) {
-        currentSubject.name = name
-        currentSubject.code = generateSubjectCode(name)
-      }
-      const [updatedSubject] = await ctx.db
+      await ctx.db
         .update(subjects)
-        .set(currentSubject)
-        .where(eq(subjects.id, id))
-        .returning({ id: subjects.id })
-      return updatedSubject
+        .set({ name: input.name })
+        .where(eq(subjects.id, input.id))
+      return { success: true }
     }),
 
   delete: adminProcedure.input(byIdSchema).mutation(async ({ ctx, input }) => {
-    const { id } = input
-    const deleteCount = await ctx.db.delete(subjects).where(eq(subjects.id, id))
-    if (deleteCount.length === 0)
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'Subject not found' })
+    await ctx.db.delete(subjects).where(eq(subjects.id, input.id))
     return { success: true }
   }),
 } satisfies TRPCRouterRecord
-
-function generateSubjectCode(name: string): string {
-  const prefix = name.slice(0, 3).toUpperCase()
-  const suffix = Math.floor(100000 + Math.random() * 900000).toString()
-  return `${prefix}${suffix}`
-}

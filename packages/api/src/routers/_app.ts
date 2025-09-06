@@ -8,6 +8,7 @@ const appRouter = createTRPCRouter({
   nfc: (await import('./nfc')).nfcRouter,
 
   admin: {
+    class: (await import('./admin/class-section')).classSectionRouter,
     room: (await import('./admin/room')).roomRouter,
     subject: (await import('./admin/subject')).subjectRouter,
     user: (await import('./admin/user')).userRouter,
