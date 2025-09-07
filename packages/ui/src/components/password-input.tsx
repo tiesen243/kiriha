@@ -1,9 +1,9 @@
 'use client'
 
 import * as React from 'react'
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
 
 import { cn } from '@attendify/ui'
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
 
 function PasswordInput({
   className,

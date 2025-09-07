@@ -32,25 +32,26 @@ export const classSectionRouter = {
   create: adminProcedure
     .input(createSchema)
     .mutation(async ({ ctx, input }) => {
-      const { subjectId, teacherId, roomId, endTime, startTime } = input
-      const { startDate, endDate, dateOfWeek } = input
+      const { subjectId, teacherId, roomId } = input
+      const { startDate, endDate, schedules } = input
 
-      const dates = getDatesBetween(
-        new Date(startDate),
-        new Date(endDate),
-        dateOfWeek,
+      const classSessions = schedules.flatMap(
+        ({ dateOfWeek, startTime, endTime }) =>
+          getDatesBetween(
+            new Date(startDate),
+            new Date(endDate),
+            dateOfWeek,
+          ).map((date) => ({
+            roomId,
+            subjectId,
+            teacherId,
+            date,
+            startTime,
+            endTime,
+          })),
       )
-      await ctx.db.insert(classes).values(
-        dates.map((date) => ({
-          roomId,
-          subjectId,
-          teacherId,
 
-          date,
-          endTime,
-          startTime,
-        })),
-      )
+      await ctx.db.insert(classes).values(classSessions)
     }),
 
   update: adminProcedure
@@ -72,13 +73,13 @@ export const classSectionRouter = {
 function getDatesBetween(
   startDate: Date,
   endDate: Date,
-  dayOfWeek: number,
+  dateOfWeek: number,
 ): Date[] {
   const dates: Date[] = []
   const currentDate = new Date(startDate)
 
   currentDate.setDate(
-    currentDate.getDate() + ((dayOfWeek - currentDate.getDay() + 7) % 7),
+    currentDate.getDate() + ((dateOfWeek - currentDate.getDay() + 7) % 7),
   )
   while (currentDate <= endDate) {
     dates.push(new Date(currentDate))

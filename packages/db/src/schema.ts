@@ -198,6 +198,7 @@ export const subjects = pgTable('subject', (t) => ({
     .$defaultFn(() => generateSubjectCode())
     .unique()
     .notNull(),
+  credit: t.integer().notNull(),
   createdAt,
   updatedAt,
 }))

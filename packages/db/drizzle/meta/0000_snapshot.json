@@ -1,5 +1,5 @@
 {
-  "id": "d9b037f8-5d1b-45e9-8796-28eaf9b4737c",
+  "id": "93d966a5-9ee5-4a6a-81c8-c666ee052c9a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -579,6 +579,12 @@
         "code": {
           "name": "code",
           "type": "varchar(7)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "credit": {
+          "name": "credit",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },

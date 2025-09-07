@@ -53,17 +53,19 @@ export const subjectRouter = {
   create: adminProcedure
     .input(createSchema)
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(subjects).values({ name: input.name })
+      const { name, credit } = input
+      await ctx.db.insert(subjects).values({ name, credit })
       return { success: true }
     }),
 
   update: adminProcedure
     .input(updateSchema)
     .mutation(async ({ ctx, input }) => {
+      const { id, name, credit } = input
       await ctx.db
         .update(subjects)
-        .set({ name: input.name })
-        .where(eq(subjects.id, input.id))
+        .set({ name, credit })
+        .where(eq(subjects.id, id))
       return { success: true }
     }),
 

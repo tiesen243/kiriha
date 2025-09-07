@@ -19,12 +19,16 @@ export const createSchema = z.object({
   subjectId: z.cuid2(),
   teacherId: z.cuid2(),
 
-  startTime: z.iso.time(),
-  endTime: z.iso.time(),
-
   startDate: z.iso.date(),
   endDate: z.iso.date(),
-  dateOfWeek: z.number().min(0).max(6),
+
+  schedules: z.array(
+    z.object({
+      startTime: z.iso.time(),
+      endTime: z.iso.time(),
+      dateOfWeek: z.number().min(0).max(6),
+    }),
+  ),
 })
 export type CreateClassSectionInput = z.infer<typeof createSchema>
 

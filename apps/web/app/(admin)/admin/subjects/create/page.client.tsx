@@ -20,7 +20,7 @@ export const CreateSubjectForm: React.FC = () => {
   const router = useRouter()
 
   const { control, handleSubmit, state } = useForm({
-    defaultValues: { name: '' },
+    defaultValues: { name: '', credit: 2 },
     validator: createSchema,
     onSubmit: trpcClient.admin.subject.create.mutate,
     onSuccess: async () => {
@@ -38,7 +38,21 @@ export const CreateSubjectForm: React.FC = () => {
           <div className='grid gap-2'>
             <FormLabel>Name</FormLabel>
             <FormControl {...field}>
-              <Input placeholder='Subject Name' />
+              <Input placeholder='e.g. Mathematics, Physics, Chemistry' />
+            </FormControl>
+            <FormMessage />
+          </div>
+        )}
+      />
+
+      <FormField
+        control={control}
+        name='credit'
+        render={({ field }) => (
+          <div className='grid gap-2'>
+            <FormLabel>Credit</FormLabel>
+            <FormControl {...field}>
+              <Input type='number' placeholder='e.g. 2, 3, 4' />
             </FormControl>
             <FormMessage />
           </div>

@@ -15,6 +15,7 @@ export type ByIdInput = z.infer<typeof byIdSchema>
 
 export const createSchema = z.object({
   name: z.string().min(1).max(100),
+  credit: z.number().min(2),
 })
 export type CreateInput = z.infer<typeof createSchema>
 

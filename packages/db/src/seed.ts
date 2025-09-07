@@ -44,18 +44,20 @@ async function main() {
 
   await db
     .insert(subjects)
-    .values([
-      { name: 'Mathematics' },
-      { name: 'Data Structures and Algorithms' },
-      { name: 'Operating Systems' },
-      { name: 'Database Systems' },
-      { name: 'Computer Networks' },
-      { name: 'Software Engineering' },
-      { name: 'Artificial Intelligence' },
-      { name: 'Machine Learning' },
-      { name: 'Web Development' },
-      { name: 'Mobile App Development' },
-    ])
+    .values(
+      [
+        'Mathematics',
+        'Data Structures and Algorithms',
+        'Operating Systems',
+        'Database Systems',
+        'Computer Networks',
+        'Software Engineering',
+        'Artificial Intelligence',
+        'Machine Learning',
+        'Web Development',
+        'Mobile App Development',
+      ].map((name) => ({ name, credit: Math.floor(Math.random() * 3) + 2 })),
+    )
 }
 
 main()

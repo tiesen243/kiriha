@@ -62,6 +62,7 @@ CREATE TABLE "subject" (
 	"id" varchar(24) PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"code" varchar(7) NOT NULL,
+	"credit" integer NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "subject_code_unique" UNIQUE("code")
