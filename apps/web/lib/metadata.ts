@@ -7,11 +7,12 @@ export interface Metadata extends NextMetadata {
 }
 
 export function createMetadata(override: Metadata = {}): Metadata {
-  const siteName = 'attendify'
+  const siteName = 'Attendify'
   const baseUrl = getBaseUrl()
 
   const title = override.title ? `${override.title} | ${siteName}` : siteName
-  const description = 'Generate by Create Yuki Stack'
+  const description =
+    'A robust attendance system integrating Next.js, tRPC, Drizzle ORM, and ESP8266 hardware with RC522 RFID for fast, reliable, and automated attendance tracking.'
   const url = override.openGraph?.url
     ? `${baseUrl}${override.openGraph.url}`
     : baseUrl

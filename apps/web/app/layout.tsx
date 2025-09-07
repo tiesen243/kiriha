@@ -1,6 +1,7 @@
 import '@/app/globals.css'
 
 import { Geist, Geist_Mono } from 'next/font/google'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 import { SessionProvider } from '@attendify/auth/react'
 import { cn, ThemeProvider } from '@attendify/ui'
@@ -29,13 +30,15 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         )}
       >
         <ThemeProvider attribute='class' disableTransitionOnChange enableSystem>
-          <TRPCReactProvider>
-            <SessionProvider>{children}</SessionProvider>
-          </TRPCReactProvider>
+          <NuqsAdapter>
+            <TRPCReactProvider>
+              <SessionProvider>{children}</SessionProvider>
+            </TRPCReactProvider>
+          </NuqsAdapter>
         </ThemeProvider>
       </body>
     </html>
   )
 }
 
-export const metadata = createMetadata({ title: 'Next.js' })
+export const metadata = createMetadata()

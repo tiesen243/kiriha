@@ -35,6 +35,8 @@ import {
   SidebarMenuSubItem,
 } from '@attendify/ui/sidebar'
 
+import { ThemeToggle } from '@/app/(admin)/_components/theme-toggle'
+
 interface AdminSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User
 }
@@ -80,7 +82,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
 
-                      <CollapsibleContent>
+                      <CollapsibleContent className='overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down'>
                         <SidebarMenuSub>
                           {item.children.map((subItem) => (
                             <SidebarMenuSubItem key={subItem.id}>
@@ -114,7 +116,10 @@ export function AdminSidebar(props: AdminSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter></SidebarFooter>
+      <SidebarFooter className='flex-row items-center justify-between border-t text-sm'>
+        <p>&copy; {new Date().getFullYear()} Attendify.</p>
+        <ThemeToggle />
+      </SidebarFooter>
     </Sidebar>
   )
 }

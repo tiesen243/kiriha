@@ -1,7 +1,6 @@
 import * as z from 'zod'
 
 export const allSchema = z.object({
-  id: z.cuid2(),
   search: z.string().optional(),
 
   page: z.number().min(1).default(1),

@@ -24,6 +24,7 @@
     "@trpc/client": "catalog:api",
     "@trpc/tanstack-react-query": "catalog:api",
     "next": "^15.5.2",
+    "nuqs": "^2.6.0",
     "react": "catalog:react",
     "react-dom": "catalog:react",
     "superjson": "catalog:api"
