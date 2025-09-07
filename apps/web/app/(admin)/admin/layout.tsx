@@ -9,7 +9,8 @@ import { Header } from '@/app/(admin)/_components/header'
 
 export default async function AdminLayout({ children }: LayoutProps<'/'>) {
   const session = await auth({ headers: await headers() })
-  if (session.user?.role !== 'admin') redirect('/')
+  if (!session.user) redirect('/login')
+  if (session.user.role !== 'admin') redirect('/')
 
   return (
     <SidebarProvider

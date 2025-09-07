@@ -24,7 +24,7 @@ export const roomRouter = {
       .where(whereClause)
       .limit(input.limit)
       .offset((input.page - 1) * input.limit)
-      .orderBy(desc(rooms.createdAt))
+      .orderBy(desc(rooms.updatedAt))
     const totalItems = await ctx.db.$count(rooms)
 
     return {

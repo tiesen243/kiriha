@@ -24,9 +24,9 @@ export const userRouter = {
       .where(whereClause)
       .leftJoin(students, eq(students.userId, users.id))
       .leftJoin(teachers, eq(teachers.userId, users.id))
-      .orderBy(desc(users.createdAt))
       .limit(input.limit)
       .offset((input.page - 1) * input.limit)
+      .orderBy(desc(users.updatedAt))
 
     const totalCount = await ctx.db.$count(users)
 

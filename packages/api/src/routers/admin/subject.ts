@@ -1,7 +1,7 @@
 import type { TRPCRouterRecord } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
 
-import { eq, ilike } from '@attendify/db'
+import { desc, eq, ilike } from '@attendify/db'
 import { subjects } from '@attendify/db/schema'
 import {
   allSchema,
@@ -24,6 +24,8 @@ export const subjectRouter = {
       .where(whereClause)
       .limit(input.limit)
       .offset((input.page - 1) * input.limit)
+      .orderBy(desc(subjects.updatedAt))
+
     const totalItems = await ctx.db.$count(subjects)
 
     return {

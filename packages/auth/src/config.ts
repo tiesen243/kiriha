@@ -103,8 +103,8 @@ function getAdapter(): AuthOptions['adapter'] {
 }
 
 declare module './core/types.d.ts' {
-  type IUser = typeof users.$inferInsert
-  type ISession = typeof sessions.$inferInsert
+  type IUser = typeof users.$inferSelect
+  type ISession = typeof sessions.$inferSelect
 
   interface User extends IUser {
     id: string
