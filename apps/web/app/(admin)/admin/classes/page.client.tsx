@@ -31,7 +31,7 @@ export const ClassTable: React.FC = () => {
         {status !== 'success'
           ? Array.from({ length: 10 }, (_, idx) => (
               <TableRow key={idx} className='h-14'>
-                {Array.from({ length: 6 }, (_, cellIdx) => (
+                {Array.from({ length: 8 }, (_, cellIdx) => (
                   <TableCell key={cellIdx}>
                     <div className='animate-pulse rounded-sm bg-muted-foreground'>
                       &nbsp;
@@ -46,7 +46,7 @@ export const ClassTable: React.FC = () => {
       <TableFooter>
         <TableRow>
           <TableCell>
-            Total: {status === 'success' ? data.total : 0} subjects
+            Total: {status === 'success' ? data.total : 0} classes
           </TableCell>
 
           <TableCell colSpan={7}>
@@ -72,7 +72,7 @@ const ClassTableHeader: React.FC = () => (
       <TableHead className='w-[80px]'>Status</TableHead>
       <TableHead className='w-[100px]'> Date</TableHead>
       <TableHead className='w-[100px]'>Time</TableHead>
-      <TableHead className='w-[150px]'>Actions</TableHead>
+      <TableHead className='w-[150px] text-center'>Actions</TableHead>
     </TableRow>
   </TableHeader>
 )
