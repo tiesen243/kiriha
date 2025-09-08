@@ -18,6 +18,7 @@ export default function SubjectsPage({
           <Link href='/admin/subjects/create'>Create Subject</Link>
         </Button>
       </div>
+
       <SubjectTable />
     </main>
   )

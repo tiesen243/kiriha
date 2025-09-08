@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 
 import { auth } from '@attendify/auth'
 import { SidebarInset, SidebarProvider } from '@attendify/ui/sidebar'
+import { Toaster } from '@attendify/ui/sonner'
 
 import { AdminSidebar } from '@/app/(admin)/_components/admin-sidebar'
 import { Header } from '@/app/(admin)/_components/header'
@@ -27,6 +28,8 @@ export default async function AdminLayout({ children }: LayoutProps<'/'>) {
         <Header />
         {children}
       </SidebarInset>
+
+      <Toaster />
     </SidebarProvider>
   )
 }

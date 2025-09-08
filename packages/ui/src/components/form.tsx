@@ -97,7 +97,7 @@ function useForm<
   )
 
   const handleSubmit = React.useCallback(
-    (event: React.FormEvent) => {
+    (event: React.FormEvent | React.MouseEvent) => {
       startTransition(async () => {
         event.preventDefault()
         event.stopPropagation()
@@ -108,6 +108,7 @@ function useForm<
         const validationResult = await validateField()
         if (!validationResult.isValid) {
           formErrorRef.current = { issues: validationResult.errors } as TError
+          setVersion((v) => v + 1)
           return
         }
 
@@ -121,6 +122,8 @@ function useForm<
             error instanceof Error ? error.message : 'Unknown error'
           formErrorRef.current = { message } as TError
           await onError?.({ message } as TError)
+        } finally {
+          setVersion((v) => v + 1)
         }
       })
     },
@@ -199,6 +202,7 @@ interface FormFieldContextValue<
     formDescriptionId: string
     formMessageId: string
   }
+  setValue: (value: TValue[TName]) => void
 }
 
 const FormFieldContext = React.createContext<FormFieldContextValue<
@@ -234,16 +238,20 @@ function FormField<
 
   const [value, setValue] = React.useState(formValueRef.current[name])
   const prevValueRef = React.useRef(value)
-
-  React.useEffect(() => {
-    const newValue = formValueRef.current[name]
-    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
-    if (newValue !== value) setValue(newValue)
-  }, [formValueRef, name, value, version])
-
   const [error, setError] = React.useState(
     formErrorRef.current?.issues?.[name] ?? '',
   )
+
+  React.useEffect(() => {
+    const currentError = formErrorRef.current?.issues?.[name] ?? ''
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    if (currentError !== error) setError(currentError)
+
+    const newValue = formValueRef.current[name]
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    if (newValue !== value) setValue(newValue)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formErrorRef, name, version])
 
   const parseValue = React.useCallback((target: HTMLInputElement) => {
     switch (target.type) {
@@ -251,8 +259,6 @@ function FormField<
         return target.valueAsNumber as TValue[TFieldName]
       case 'checkbox':
         return target.checked as TValue[TFieldName]
-      case 'date':
-        return target.valueAsDate as TValue[TFieldName]
       default:
         return target.value as TValue[TFieldName]
     }
@@ -276,8 +282,7 @@ function FormField<
     prevValueRef.current = value
 
     const results = await validateField(name, value)
-    if (!results.isValid && results.errors[name]) setError(results.errors[name])
-    else setError('')
+    setError(results.isValid ? '' : results.errors[name])
   }, [name, value, validateField])
 
   const id = React.useId()
@@ -293,8 +298,12 @@ function FormField<
           formDescriptionId: `${id}-form-item-description`,
           formMessageId: `${id}-form-item-message`,
         },
+        setValue: (newValue: TValue[TFieldName]) => {
+          setValue(newValue)
+          formValueRef.current[name] = newValue
+        },
       }) satisfies FormFieldContextValue<TValue, TFieldName>,
-    [error, handleBlur, handleChange, id, isPending, name, value],
+    [error, formValueRef, handleBlur, handleChange, id, isPending, name, value],
   )
 
   return (

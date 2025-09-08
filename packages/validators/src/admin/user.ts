@@ -12,6 +12,13 @@ export const byIdSchema = z.object({
 })
 export type ByIdInput = z.infer<typeof byIdSchema>
 
+export const byRoleSchema = z.object({
+  role: z.enum(['student', 'teacher', 'admin']),
+  page: z.number().min(1).default(1),
+  limit: z.number().min(1).max(1000).default(10),
+})
+export type ByRoleInput = z.infer<typeof byRoleSchema>
+
 export const createSchema = z.object({
   name: z.string().min(2).max(100),
   cardId: z.string().min(16).max(32),

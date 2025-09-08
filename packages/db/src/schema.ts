@@ -215,6 +215,7 @@ export const classes = pgTable(
       .primaryKey()
       .$defaultFn(() => generateId())
       .notNull(),
+    code: t.varchar({ length: 12 }).notNull(),
     subjectId: t
       .varchar({ length: 24 })
       .notNull()
@@ -237,6 +238,7 @@ export const classes = pgTable(
     updatedAt,
   }),
   (t) => [
+    index('class_section_code_idx').on(t.code),
     index('class_section_subjectId_idx').on(t.subjectId),
     index('class_section_teacherId_idx').on(t.teacherId),
     index('class_section_roomId_idx').on(t.roomId),

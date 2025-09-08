@@ -1,11 +1,12 @@
 import type { TRPCRouterRecord } from '@trpc/server'
 
 import { and, desc, eq, gte } from '@attendify/db'
-import { classes } from '@attendify/db/schema'
+import { classes, rooms, subjects, teachers, users } from '@attendify/db/schema'
 import {
   allSchema,
   byIdSchema,
   createSchema,
+  dateOfWeekMap,
   updateSchema,
 } from '@attendify/validators/admin/class-section'
 
@@ -22,11 +23,35 @@ export const classSectionRouter = {
     if (startDate) whereClause.push(gte(classes.date, new Date(startDate)))
     if (endDate) whereClause.push(gte(classes.date, new Date(endDate)))
 
-    return await ctx.db
-      .select()
+    const result = await ctx.db
+      .select({
+        id: classes.id,
+        code: classes.code,
+        subject: subjects.name,
+        teacher: users.name,
+        room: rooms.name,
+        status: classes.status,
+        date: classes.date,
+        startTime: classes.startTime,
+        endTime: classes.endTime,
+      })
       .from(classes)
       .where(and(...whereClause))
+      .limit(input.limit)
+      .offset((input.page - 1) * input.limit)
       .orderBy(desc(classes.date))
+      .innerJoin(subjects, eq(subjects.id, classes.subjectId))
+      .innerJoin(teachers, eq(teachers.id, classes.teacherId))
+      .innerJoin(users, eq(users.id, teachers.userId))
+      .innerJoin(rooms, eq(rooms.id, classes.roomId))
+    const totalItems = await ctx.db.$count(classes)
+
+    return {
+      classes: result,
+      total: totalItems,
+      page: input.page,
+      totalPages: Math.ceil(totalItems / input.limit),
+    }
   }),
 
   create: adminProcedure
@@ -35,6 +60,7 @@ export const classSectionRouter = {
       const { subjectId, teacherId, roomId } = input
       const { startDate, endDate, schedules } = input
 
+      const classCode = Math.floor(1e11 + Math.random() * 9e11).toString()
       const classSessions = schedules.flatMap(
         ({ dateOfWeek, startTime, endTime }) =>
           getDatesBetween(
@@ -42,9 +68,10 @@ export const classSectionRouter = {
             new Date(endDate),
             dateOfWeek,
           ).map((date) => ({
-            roomId,
+            code: classCode,
             subjectId,
             teacherId,
+            roomId,
             date,
             startTime,
             endTime,
@@ -73,13 +100,14 @@ export const classSectionRouter = {
 function getDatesBetween(
   startDate: Date,
   endDate: Date,
-  dateOfWeek: number,
+  dateOfWeek: keyof typeof dateOfWeekMap,
 ): Date[] {
   const dates: Date[] = []
   const currentDate = new Date(startDate)
 
   currentDate.setDate(
-    currentDate.getDate() + ((dateOfWeek - currentDate.getDay() + 7) % 7),
+    currentDate.getDate() +
+      ((dateOfWeekMap[dateOfWeek].getDay - currentDate.getDay() + 7) % 7),
   )
   while (currentDate <= endDate) {
     dates.push(new Date(currentDate))

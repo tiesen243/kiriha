@@ -6,6 +6,7 @@ import { students, teachers, users } from '@attendify/db/schema'
 import {
   allSchema,
   byIdSchema,
+  byRoleSchema,
   createSchema,
   updateSchema,
 } from '@attendify/validators/admin/user'
@@ -52,6 +53,46 @@ export const userRouter = {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' })
 
     return user
+  }),
+
+  byRole: adminProcedure.input(byRoleSchema).query(async ({ ctx, input }) => {
+    const stmt = ctx.db
+      .select({
+        ...(input.role === 'student'
+          ? { studentId: students.id }
+          : input.role === 'teacher'
+            ? { teacherId: teachers.id }
+            : {}),
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+      })
+
+      .from(users)
+      .where(eq(users.role, input.role))
+
+    if (input.role === 'student')
+      stmt.leftJoin(students, eq(students.userId, users.id))
+    else if (input.role === 'teacher')
+      stmt.leftJoin(teachers, eq(teachers.userId, users.id))
+
+    stmt
+      .limit(input.limit)
+      .offset((input.page - 1) * input.limit)
+      .orderBy(desc(users.updatedAt))
+
+    const usersList = await stmt
+
+    const totalCount = await ctx.db.$count(users, eq(users.role, input.role))
+
+    return {
+      users: usersList,
+      total: totalCount,
+      page: input.page,
+      totalPages: Math.ceil(totalCount / input.limit),
+    }
   }),
 
   create: adminProcedure

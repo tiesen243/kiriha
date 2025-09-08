@@ -16,6 +16,7 @@ export default function RoomsPage({ searchParams }: PageProps<'/admin/rooms'>) {
           <Link href='/admin/rooms/create'>Create Room</Link>
         </Button>
       </div>
+
       <RoomTable />
     </main>
   )
