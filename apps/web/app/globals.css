@@ -1,4 +1,4 @@
-@import '@attendify/ui/tailwind.css';
+@import '@kiriha/ui/tailwind.css';
 @source "../../../packages/ui/src/**/*.tsx";
 
 @theme inline {

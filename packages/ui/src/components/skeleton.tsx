@@ -1,4 +1,4 @@
-import { cn } from '@attendify/ui'
+import { cn } from '@kiriha/ui'
 
 function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
   return (

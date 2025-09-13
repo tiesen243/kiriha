@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-import type { LoginInput } from '@attendify/validators/auth'
+import type { LoginInput } from '@kiriha/validators/auth'
 
 import type { Providers } from './config'
 import type { SessionResult, User } from './core/types'

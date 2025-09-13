@@ -1,10 +1,10 @@
-# attendify
+# Kiriha
 
 A robust attendance system integrating Next.js, tRPC, Drizzle ORM, and ESP8266 hardware with RC522 RFID for fast, reliable, and automated attendance tracking.
 
 ## Overview
 
-Attendify streamlines attendance management using modern web technologies and IoT hardware. It offers a full-stack solution for educational and organizational environments.
+Kiriha streamlines attendance management using modern web technologies and IoT hardware. It offers a full-stack solution for educational and organizational environments.
 
 ## Tech Stack
 
@@ -40,8 +40,8 @@ Attendify streamlines attendance management using modern web technologies and Io
 
 1. **Clone the repository**
    ```bash
-   git clone git@github.com:tiesen243/attendify.git
-   cd attendify
+   git clone git@github.com:tiesen243/kiriha.git
+   cd kiriha
    ```
 2. **Install dependencies**
    ```bash
@@ -80,7 +80,7 @@ Attendify streamlines attendance management using modern web technologies and Io
 ## Project Structure
 
 ```text
-attendify/
+kiriha/
 ├── apps/            # Web and mobile applications
 │   ├── mobile/      # Expo app
 │   └── web/         # Next.js web app

@@ -3,8 +3,8 @@ import '@/app/globals.css'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
-import { SessionProvider } from '@attendify/auth/react'
-import { cn, ThemeProvider } from '@attendify/ui'
+import { SessionProvider } from '@kiriha/auth/react'
+import { cn, ThemeProvider } from '@kiriha/ui'
 
 import { createMetadata } from '@/lib/metadata'
 import { TRPCReactProvider } from '@/trpc/react'

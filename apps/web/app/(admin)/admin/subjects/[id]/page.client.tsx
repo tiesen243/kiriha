@@ -2,17 +2,17 @@
 
 import { useRouter } from 'next/navigation'
 
-import type { RouterOutputs } from '@attendify/api'
-import { Button } from '@attendify/ui/button'
+import type { RouterOutputs } from '@kiriha/api'
+import { Button } from '@kiriha/ui/button'
 import {
   FormControl,
   FormField,
   FormLabel,
   FormMessage,
   useForm,
-} from '@attendify/ui/form'
-import { Input } from '@attendify/ui/input'
-import { updateSchema } from '@attendify/validators/admin/subject'
+} from '@kiriha/ui/form'
+import { Input } from '@kiriha/ui/input'
+import { updateSchema } from '@kiriha/validators/admin/subject'
 
 import { useTRPC } from '@/trpc/react'
 

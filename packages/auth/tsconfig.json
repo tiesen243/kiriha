@@ -1,5 +1,5 @@
 {
-  "extends": "@attendify/tsconfig/react.json",
+  "extends": "@kiriha/tsconfig/react.json",
   "compilerOptions": {
     "rootDir": "src"
   },

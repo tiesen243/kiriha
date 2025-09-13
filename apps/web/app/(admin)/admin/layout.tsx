@@ -1,9 +1,9 @@
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-import { auth } from '@attendify/auth'
-import { SidebarInset, SidebarProvider } from '@attendify/ui/sidebar'
-import { Toaster } from '@attendify/ui/sonner'
+import { auth } from '@kiriha/auth'
+import { SidebarInset, SidebarProvider } from '@kiriha/ui/sidebar'
+import { Toaster } from '@kiriha/ui/sonner'
 
 import { AdminSidebar } from '@/app/(admin)/_components/admin-sidebar'
 import { Header } from '@/app/(admin)/_components/header'

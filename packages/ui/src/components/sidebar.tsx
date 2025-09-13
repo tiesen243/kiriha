@@ -6,25 +6,25 @@ import { Slot } from '@radix-ui/react-slot'
 import { cva } from 'class-variance-authority'
 import { PanelLeftIcon } from 'lucide-react'
 
-import { cn } from '@attendify/ui'
-import { Button } from '@attendify/ui/button'
-import { useMediaQuery } from '@attendify/ui/hooks/use-media-query'
-import { Input } from '@attendify/ui/input'
-import { Separator } from '@attendify/ui/separator'
+import { cn } from '@kiriha/ui'
+import { Button } from '@kiriha/ui/button'
+import { useMediaQuery } from '@kiriha/ui/hooks/use-media-query'
+import { Input } from '@kiriha/ui/input'
+import { Separator } from '@kiriha/ui/separator'
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from '@attendify/ui/sheet'
-import { Skeleton } from '@attendify/ui/skeleton'
+} from '@kiriha/ui/sheet'
+import { Skeleton } from '@kiriha/ui/skeleton'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@attendify/ui/tooltip'
+} from '@kiriha/ui/tooltip'
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state'
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7

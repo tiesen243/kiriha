@@ -1,5 +1,5 @@
-import { Card } from '@attendify/ui/card'
-import { Toaster } from '@attendify/ui/sonner'
+import { Card } from '@kiriha/ui/card'
+import { Toaster } from '@kiriha/ui/sonner'
 
 export default function AuthLayout({ children }: LayoutProps<'/'>) {
   return (

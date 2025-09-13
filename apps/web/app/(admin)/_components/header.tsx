@@ -1,5 +1,5 @@
-import { Separator } from '@attendify/ui/separator'
-import { SidebarTrigger } from '@attendify/ui/sidebar'
+import { Separator } from '@kiriha/ui/separator'
+import { SidebarTrigger } from '@kiriha/ui/sidebar'
 
 export function Header() {
   return (

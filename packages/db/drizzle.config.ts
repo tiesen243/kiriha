@@ -1,6 +1,6 @@
 import { defineConfig } from 'drizzle-kit'
 
-import { env } from '@attendify/validators/env'
+import { env } from '@kiriha/validators/env'
 
 export default defineConfig({
   dialect: 'postgresql',

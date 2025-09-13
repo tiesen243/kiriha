@@ -1,5 +1,5 @@
 {
-  "extends": "@attendify/tsconfig/next.json",
+  "extends": "@kiriha/tsconfig/next.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

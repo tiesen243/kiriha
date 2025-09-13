@@ -3,7 +3,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@attendify/ui/card'
+} from '@kiriha/ui/card'
 
 import { LoginForm } from '@/app/(auth)/_components/login-form'
 

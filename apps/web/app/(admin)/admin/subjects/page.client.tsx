@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useQueryStates } from 'nuqs'
 
-import type { RouterOutputs } from '@attendify/api'
-import { Button } from '@attendify/ui/button'
+import type { RouterOutputs } from '@kiriha/api'
+import { Button } from '@kiriha/ui/button'
 import {
   Table,
   TableBody,
@@ -15,7 +15,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@attendify/ui/table'
+} from '@kiriha/ui/table'
 
 import { subjectsSearchParams } from '@/app/(admin)/admin/subjects/page.lib'
 import { useTRPC } from '@/trpc/react'

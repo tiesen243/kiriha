@@ -1,5 +1,5 @@
 {
-  "name": "@attendify/api",
+  "name": "@kiriha/api",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
@@ -18,18 +18,18 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
-  "prettier": "@attendify/prettier-config",
+  "prettier": "@kiriha/prettier-config",
   "dependencies": {
-    "@attendify/auth": "workspace:*",
-    "@attendify/db": "workspace:*",
-    "@attendify/validators": "workspace:*",
+    "@kiriha/auth": "workspace:*",
+    "@kiriha/db": "workspace:*",
+    "@kiriha/validators": "workspace:*",
     "@trpc/server": "catalog:api",
     "superjson": "catalog:api"
   },
   "devDependencies": {
-    "@attendify/eslint-config": "workspace:*",
-    "@attendify/prettier-config": "workspace:*",
-    "@attendify/tsconfig": "workspace:*",
+    "@kiriha/eslint-config": "workspace:*",
+    "@kiriha/prettier-config": "workspace:*",
+    "@kiriha/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"

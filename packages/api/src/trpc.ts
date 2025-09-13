@@ -1,8 +1,8 @@
 import { initTRPC, TRPCError } from '@trpc/server'
 import SuperJSON from 'superjson'
 
-import { auth, validateSessionToken } from '@attendify/auth'
-import { db } from '@attendify/db'
+import { auth, validateSessionToken } from '@kiriha/auth'
+import { db } from '@kiriha/db'
 
 const isomorphicGetSession = async (headers: Headers) => {
   const authToken = headers.get('Authorization') ?? null

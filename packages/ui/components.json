@@ -14,11 +14,11 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "@attendify/ui",
-    "hooks": "@attendify/ui/hooks",
-    "lib": "@attendify/ui/lib",
-    "utils": "@attendify/ui",
-    "ui": "@attendify/ui/components"
+    "components": "@kiriha/ui",
+    "hooks": "@kiriha/ui/hooks",
+    "lib": "@kiriha/ui/lib",
+    "utils": "@kiriha/ui",
+    "ui": "@kiriha/ui/components"
   },
   "iconLibrary": "lucide"
 }

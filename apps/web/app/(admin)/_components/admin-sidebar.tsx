@@ -2,12 +2,12 @@ import type { UrlObject } from 'node:url'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import type { User } from '@attendify/auth'
+import type { User } from '@kiriha/auth'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@attendify/ui/collapsible'
+} from '@kiriha/ui/collapsible'
 import {
   BookOpenIcon,
   Building2Icon,
@@ -19,7 +19,7 @@ import {
   UserCheckIcon,
   UserCogIcon,
   UsersIcon,
-} from '@attendify/ui/icons'
+} from '@kiriha/ui/icons'
 import {
   Sidebar,
   SidebarContent,
@@ -33,7 +33,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from '@attendify/ui/sidebar'
+} from '@kiriha/ui/sidebar'
 
 import { ThemeToggle } from '@/app/(admin)/_components/theme-toggle'
 

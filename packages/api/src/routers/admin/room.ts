@@ -1,14 +1,14 @@
 import type { TRPCRouterRecord } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
 
-import { desc, eq, ilike } from '@attendify/db'
-import { rooms } from '@attendify/db/schema'
+import { desc, eq, ilike } from '@kiriha/db'
+import { rooms } from '@kiriha/db/schema'
 import {
   allSchema,
   byIdSchema,
   createSchema,
   updateSchema,
-} from '@attendify/validators/admin/room'
+} from '@kiriha/validators/admin/room'
 
 import { adminProcedure } from '../../trpc'
 

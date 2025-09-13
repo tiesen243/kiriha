@@ -1,6 +1,6 @@
-import baseConfig, { restrictEnvAccess } from '@attendify/eslint-config/base'
-import nextConfig from '@attendify/eslint-config/next'
-import reactConfig from '@attendify/eslint-config/react'
+import baseConfig, { restrictEnvAccess } from '@kiriha/eslint-config/base'
+import nextConfig from '@kiriha/eslint-config/next'
+import reactConfig from '@kiriha/eslint-config/react'
 
 /** @type {import('typescript-eslint').Config} */
 export default [

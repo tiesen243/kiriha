@@ -1,5 +1,5 @@
 {
-  "name": "@attendify/auth",
+  "name": "@kiriha/auth",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -30,15 +30,15 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
-  "prettier": "@attendify/prettier-config",
+  "prettier": "@kiriha/prettier-config",
   "dependencies": {
-    "@attendify/db": "workspace:*",
-    "@attendify/validators": "workspace:*"
+    "@kiriha/db": "workspace:*",
+    "@kiriha/validators": "workspace:*"
   },
   "devDependencies": {
-    "@attendify/eslint-config": "workspace:*",
-    "@attendify/prettier-config": "workspace:*",
-    "@attendify/tsconfig": "workspace:*",
+    "@kiriha/eslint-config": "workspace:*",
+    "@kiriha/prettier-config": "workspace:*",
+    "@kiriha/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"

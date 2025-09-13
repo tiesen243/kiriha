@@ -27,6 +27,7 @@ app.config.timestamp_*.js
 .expo/
 android/
 ios/
+expo-env.d.ts
 
 # java
 /nbproject/private/

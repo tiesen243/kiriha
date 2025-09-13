@@ -5,7 +5,7 @@ export function getBaseUrl(): string {
   const localhost = debuggerHost?.split(':')[0]
 
   if (!localhost) {
-    // return "https://attendify.vercel.app";
+    // return "https://kiriha.vercel.app"
     throw new Error(
       'Failed to get localhost. Please point to your production server.',
     )

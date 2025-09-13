@@ -1,14 +1,14 @@
 import type { TRPCRouterRecord } from '@trpc/server'
 
-import { and, desc, eq, gte } from '@attendify/db'
-import { classes, rooms, subjects, teachers, users } from '@attendify/db/schema'
+import { and, desc, eq, gte } from '@kiriha/db'
+import { classes, rooms, subjects, teachers, users } from '@kiriha/db/schema'
 import {
   allSchema,
   byIdSchema,
   createSchema,
   dateOfWeekMap,
   updateSchema,
-} from '@attendify/validators/admin/class-section'
+} from '@kiriha/validators/admin/class-section'
 
 import { adminProcedure } from '../../trpc'
 

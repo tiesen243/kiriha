@@ -1,10 +1,10 @@
 {
-  "extends": "@attendify/tsconfig/react.json",
+  "extends": "@kiriha/tsconfig/react.json",
   "compilerOptions": {
     "rootDir": "src",
     "baseUrl": ".",
     "paths": {
-      "@attendify/ui/*": ["./src/*"]
+      "@kiriha/ui/*": ["./src/*"]
     }
   },
   "include": ["src"],

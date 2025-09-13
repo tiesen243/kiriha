@@ -1,5 +1,5 @@
 {
-  "name": "@attendify/db",
+  "name": "@kiriha/db",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -26,16 +26,16 @@
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
-  "prettier": "@attendify/prettier-config",
+  "prettier": "@kiriha/prettier-config",
   "dependencies": {
-    "@attendify/validators": "workspace:*",
+    "@kiriha/validators": "workspace:*",
     "drizzle-orm": "^0.44.5",
     "postgres": "^3.4.7"
   },
   "devDependencies": {
-    "@attendify/eslint-config": "workspace:*",
-    "@attendify/prettier-config": "workspace:*",
-    "@attendify/tsconfig": "workspace:*",
+    "@kiriha/eslint-config": "workspace:*",
+    "@kiriha/prettier-config": "workspace:*",
+    "@kiriha/tsconfig": "workspace:*",
     "dotenv-cli": "catalog:",
     "drizzle-kit": "^0.31.4",
     "eslint": "catalog:",

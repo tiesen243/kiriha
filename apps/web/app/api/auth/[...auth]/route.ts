@@ -1,3 +1,3 @@
-import { handlers } from '@attendify/auth'
+import { handlers } from '@kiriha/auth'
 
 export const { GET, POST } = handlers

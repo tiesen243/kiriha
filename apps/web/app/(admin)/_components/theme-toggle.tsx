@@ -1,8 +1,8 @@
 'use client'
 
-import { useTheme } from '@attendify/ui'
-import { Button } from '@attendify/ui/button'
-import { MoonIcon, SunIcon } from '@attendify/ui/icons'
+import { useTheme } from '@kiriha/ui'
+import { Button } from '@kiriha/ui/button'
+import { MoonIcon, SunIcon } from '@kiriha/ui/icons'
 
 export const ThemeToggle: React.FC = () => {
   const { theme, setTheme } = useTheme()

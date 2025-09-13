@@ -1,3 +1,3 @@
 {
-  "extends": "@attendify/tsconfig/base.json"
+  "extends": "@kiriha/tsconfig/base.json"
 }

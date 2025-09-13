@@ -1,4 +1,4 @@
-import baseConfig from '@attendify/eslint-config/base'
+import baseConfig from '@kiriha/eslint-config/base'
 
 /** @type {import('typescript-eslint').Config} */
 export default [

@@ -35,7 +35,7 @@ Make sure you have the following installed:
    ```bash
    bun run dev
    # or
-   bun run dev -F @attendify/nextjs...
+   bun run dev -F @kiriha/nextjs...
    ```
 
 3. Open [http://localhost:3000](http://localhost:3000) in your browser

@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
 
-import { cn } from '@attendify/ui'
+import { cn } from '@kiriha/ui'
 
 function PasswordInput({
   className,

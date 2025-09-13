@@ -40,8 +40,8 @@
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
     "dev": "turbo dev --continue",
-    "dev:web": "turbo dev --continue --filter=@attendify/web...",
-    "dev:mobile": "turbo dev --continue --filter=@attendify/mobile...",
+    "dev:web": "turbo dev --continue --filter=@kiriha/web...",
+    "dev:mobile": "turbo dev --continue --filter=@kiriha/mobile...",
     "format": "turbo run format --continue -- --cache --cache-location .cache/prettiercache",
     "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/prettiercache",
     "postinstall": "bun run lint:ws",
@@ -50,10 +50,10 @@
     "lint:ws": "bunx sherif@latest",
     "typecheck": "turbo run typecheck"
   },
-  "prettier": "@attendify/prettier-config",
+  "prettier": "@kiriha/prettier-config",
   "devDependencies": {
-    "@attendify/prettier-config": "workspace:*",
-    "@attendify/tsconfig": "workspace:*",
+    "@kiriha/prettier-config": "workspace:*",
+    "@kiriha/tsconfig": "workspace:*",
     "@turbo/gen": "^2.5.6",
     "turbo": "^2.5.6"
   },

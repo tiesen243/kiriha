@@ -1,11 +1,11 @@
-import { and, db, eq } from '@attendify/db'
+import { and, db, eq } from '@kiriha/db'
 import {
   accounts,
   sessions,
   students,
   teachers,
   users,
-} from '@attendify/db/schema'
+} from '@kiriha/db/schema'
 
 import type { AuthOptions } from './core/types'
 import { encodeHex, hashSecret } from './core/crypto'

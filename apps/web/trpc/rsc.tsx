@@ -2,11 +2,7 @@ import { cache } from 'react'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 
-import {
-  appRouter,
-  createCallerFactory,
-  createTRPCContext,
-} from '@attendify/api'
+import { appRouter, createCallerFactory, createTRPCContext } from '@kiriha/api'
 
 import { createQueryClient } from '@/trpc/query-client'
 

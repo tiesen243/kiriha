@@ -1,4 +1,4 @@
-import type { LoginInput } from '@attendify/validators/auth'
+import type { LoginInput } from '@kiriha/validators/auth'
 
 import type { Account, AuthOptions, OauthAccount, Session } from './types'
 import Cookies from './cookies'

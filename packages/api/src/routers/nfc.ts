@@ -1,7 +1,7 @@
 import EventEmitter, { on } from 'node:events'
 import type { TRPCRouterRecord } from '@trpc/server'
 
-import { scanSchema } from '@attendify/validators/nfc'
+import { scanSchema } from '@kiriha/validators/nfc'
 
 import { publicProcedure } from '../trpc'
 

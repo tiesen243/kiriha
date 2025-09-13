@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { Button } from '@attendify/ui/button'
+import { Button } from '@kiriha/ui/button'
 
 import { ClassTable } from '@/app/(admin)/admin/classes/page.client'
 

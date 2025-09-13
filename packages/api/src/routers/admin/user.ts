@@ -1,15 +1,15 @@
 import type { TRPCRouterRecord } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
 
-import { desc, eq, ilike, or } from '@attendify/db'
-import { students, teachers, users } from '@attendify/db/schema'
+import { desc, eq, ilike, or } from '@kiriha/db'
+import { students, teachers, users } from '@kiriha/db/schema'
 import {
   allSchema,
   byIdSchema,
   byRoleSchema,
   createSchema,
   updateSchema,
-} from '@attendify/validators/admin/user'
+} from '@kiriha/validators/admin/user'
 
 import { adminProcedure } from '../../trpc'
 

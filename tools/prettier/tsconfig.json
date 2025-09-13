@@ -1,5 +1,5 @@
 {
-  "extends": "@attendify/tsconfig/base.json",
+  "extends": "@kiriha/tsconfig/base.json",
   "include": ["."],
   "exclude": ["node_modules"]
 }

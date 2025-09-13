@@ -6,7 +6,7 @@ import turboPlugin from 'eslint-plugin-turbo'
 import tseslint from 'typescript-eslint'
 
 /**
- * All packages that leverage @attendify/env should use this rule
+ * All packages that leverage @kiriha/env should use this rule
  */
 export const restrictEnvAccess = tseslint.config(
   { ignores: ['**/env.ts'] },
@@ -19,7 +19,7 @@ export const restrictEnvAccess = tseslint.config(
           object: 'process',
           property: 'env',
           message:
-            "Use `import { env } from '@attendify/env'` instead to ensure validated types.",
+            "Use `import { env } from '@kiriha/env'` instead to ensure validated types.",
         },
       ],
       'no-restricted-imports': [
@@ -28,7 +28,7 @@ export const restrictEnvAccess = tseslint.config(
           name: 'process',
           importNames: ['env'],
           message:
-            "Use `import { env } from '@attendify/env'` instead to ensure validated types.",
+            "Use `import { env } from '@kiriha/env'` instead to ensure validated types.",
         },
       ],
     },

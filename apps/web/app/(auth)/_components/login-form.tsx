@@ -2,19 +2,19 @@
 
 import { useRouter } from 'next/navigation'
 
-import { useSession } from '@attendify/auth/react'
-import { Button } from '@attendify/ui/button'
+import { useSession } from '@kiriha/auth/react'
+import { Button } from '@kiriha/ui/button'
 import {
   FormControl,
   FormField,
   FormLabel,
   FormMessage,
   useForm,
-} from '@attendify/ui/form'
-import { Input } from '@attendify/ui/input'
-import { PasswordInput } from '@attendify/ui/password-input'
-import { toast } from '@attendify/ui/sonner'
-import { loginSchema } from '@attendify/validators/auth'
+} from '@kiriha/ui/form'
+import { Input } from '@kiriha/ui/input'
+import { PasswordInput } from '@kiriha/ui/password-input'
+import { toast } from '@kiriha/ui/sonner'
+import { loginSchema } from '@kiriha/validators/auth'
 
 export const LoginForm: React.FC = () => {
   const { signIn } = useSession()

@@ -5,9 +5,9 @@ import packageJson from './package.json' with { type: 'json' }
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: 'attendify',
-  slug: 'attendify',
-  scheme: 'attendify',
+  name: 'kiriha',
+  slug: 'kiriha',
+  scheme: 'kiriha',
   version: packageJson.version,
 
   newArchEnabled: true,
@@ -18,11 +18,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
 
   ios: {
-    bundleIdentifier: 'com.attendify.mobile',
+    bundleIdentifier: 'com.kiriha.mobile',
     supportsTablet: true,
   },
   android: {
-    package: 'com.attendify.mobile',
+    package: 'com.kiriha.mobile',
     edgeToEdgeEnabled: true,
   },
 

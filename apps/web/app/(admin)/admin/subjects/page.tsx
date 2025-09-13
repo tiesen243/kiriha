@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { Button } from '@attendify/ui/button'
+import { Button } from '@kiriha/ui/button'
 
 import { SubjectTable } from '@/app/(admin)/admin/subjects/page.client'
 import { subjectsSearchParamsCache } from '@/app/(admin)/admin/subjects/page.lib'

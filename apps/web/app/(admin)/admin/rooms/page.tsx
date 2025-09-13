@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { Button } from '@attendify/ui/button'
+import { Button } from '@kiriha/ui/button'
 
 import { RoomTable } from '@/app/(admin)/admin/rooms/page.client'
 import { roomsSearchParamsCache } from '@/app/(admin)/admin/rooms/page.lib'

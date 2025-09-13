@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 
-import { env } from '@attendify/validators/env'
+import { env } from '@kiriha/validators/env'
 
 import * as schema from './schema'
 

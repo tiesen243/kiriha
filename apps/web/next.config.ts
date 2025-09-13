@@ -1,4 +1,4 @@
-import '@attendify/validators/env'
+import '@kiriha/validators/env'
 
 import type { NextConfig } from 'next'
 
@@ -10,11 +10,11 @@ const nextConfig = {
   eslint: { ignoreDuringBuilds: true },
 
   transpilePackages: [
-    '@attendify/api',
-    '@attendify/auth',
-    '@attendify/db',
-    '@attendify/ui',
-    '@attendify/validators',
+    '@kiriha/api',
+    '@kiriha/auth',
+    '@kiriha/db',
+    '@kiriha/ui',
+    '@kiriha/validators',
   ],
 } satisfies NextConfig
 
