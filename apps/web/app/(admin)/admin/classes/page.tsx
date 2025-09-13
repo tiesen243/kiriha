@@ -8,7 +8,7 @@ export default function ClassesPage(_: PageProps<'/admin/classes'>) {
   return (
     <main className='container py-4'>
       <div className='mb-4 flex items-center justify-between'>
-        <h1 className='text-xl font-bold'>Classes Management</h1>
+        <h1 className='text-xl font-bold'>Class Sections Management</h1>
         <Button size='sm' asChild>
           <Link href='/admin/classes/create'>Create Class</Link>
         </Button>

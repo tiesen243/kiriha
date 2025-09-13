@@ -114,7 +114,7 @@ export const teachers = pgTable(
 
 export const teacherRelations = relations(teachers, ({ one, many }) => ({
   user: one(users, { fields: [teachers.userId], references: [users.id] }),
-  classes: many(classes),
+  classes: many(classSections),
 }))
 
 /**
@@ -183,7 +183,7 @@ export const rooms = pgTable('room', (t) => ({
 }))
 
 export const roomsRelations = relations(rooms, ({ many }) => ({
-  classes: many(classes),
+  classes: many(classSections),
 }))
 
 export const subjects = pgTable('subject', (t) => ({
@@ -204,10 +204,10 @@ export const subjects = pgTable('subject', (t) => ({
 }))
 
 export const subjectRelations = relations(subjects, ({ many }) => ({
-  classes: many(classes),
+  classes: many(classSections),
 }))
 
-export const classes = pgTable(
+export const classSections = pgTable(
   'class_section',
   (t) => ({
     id: t
@@ -245,16 +245,16 @@ export const classes = pgTable(
   ],
 )
 
-export const classRelations = relations(classes, ({ one, many }) => ({
+export const classRelations = relations(classSections, ({ one, many }) => ({
   subject: one(subjects, {
-    fields: [classes.subjectId],
+    fields: [classSections.subjectId],
     references: [subjects.id],
   }),
   teacher: one(teachers, {
-    fields: [classes.teacherId],
+    fields: [classSections.teacherId],
     references: [teachers.id],
   }),
-  room: one(rooms, { fields: [classes.roomId], references: [rooms.id] }),
+  room: one(rooms, { fields: [classSections.roomId], references: [rooms.id] }),
   attendances: many(attendances),
   enrollments: many(enrollments),
 }))
@@ -269,7 +269,7 @@ export const enrollments = pgTable(
     classId: t
       .varchar({ length: 24 })
       .notNull()
-      .references(() => classes.id, { onDelete: 'cascade' }),
+      .references(() => classSections.id, { onDelete: 'cascade' }),
   }),
   (enrollment) => [
     primaryKey({ columns: [enrollment.studentId, enrollment.classId] }),
@@ -281,9 +281,9 @@ export const enrollmentRelations = relations(enrollments, ({ one }) => ({
     fields: [enrollments.studentId],
     references: [students.id],
   }),
-  class: one(classes, {
+  class: one(classSections, {
     fields: [enrollments.classId],
-    references: [classes.id],
+    references: [classSections.id],
   }),
 }))
 
@@ -298,7 +298,7 @@ export const attendances = pgTable(
     classId: t
       .varchar({ length: 24 })
       .notNull()
-      .references(() => classes.id, { onDelete: 'cascade' }),
+      .references(() => classSections.id, { onDelete: 'cascade' }),
     studentId: t
       .varchar({ length: 10 })
       .notNull()
@@ -318,9 +318,9 @@ export const attendances = pgTable(
 )
 
 export const attendanceRelations = relations(attendances, ({ one }) => ({
-  class: one(classes, {
+  class: one(classSections, {
     fields: [attendances.classId],
-    references: [classes.id],
+    references: [classSections.id],
   }),
   student: one(students, {
     fields: [attendances.studentId],

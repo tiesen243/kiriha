@@ -1,7 +1,13 @@
 import type { TRPCRouterRecord } from '@trpc/server'
 
-import { and, desc, eq, gte } from '@kiriha/db'
-import { classes, rooms, subjects, teachers, users } from '@kiriha/db/schema'
+import { and, eq, gte, lte, max, min, sql } from '@kiriha/db'
+import {
+  classSections,
+  rooms,
+  subjects,
+  teachers,
+  users,
+} from '@kiriha/db/schema'
 import {
   allSchema,
   byIdSchema,
@@ -10,47 +16,49 @@ import {
   updateSchema,
 } from '@kiriha/validators/admin/class-section'
 
-import { adminProcedure } from '../../trpc'
+import { adminProcedure, publicProcedure } from '../../trpc'
 
 export const classSectionRouter = {
-  all: adminProcedure.input(allSchema).query(async ({ ctx, input }) => {
-    const { roomId, subjectId, teacherId, startDate, endDate } = input
+  all: publicProcedure.input(allSchema).query(async ({ ctx, input }) => {
+    const { page, limit, subjectId, startDate, endDate } = input
 
-    const whereClause = []
-    if (roomId) whereClause.push(eq(classes.roomId, roomId))
-    if (subjectId) whereClause.push(eq(classes.subjectId, subjectId))
-    if (teacherId) whereClause.push(eq(classes.teacherId, teacherId))
-    if (startDate) whereClause.push(gte(classes.date, new Date(startDate)))
-    if (endDate) whereClause.push(gte(classes.date, new Date(endDate)))
+    const conditions = []
+    if (subjectId) conditions.push(eq(min(classSections.subjectId), subjectId))
+    if (startDate)
+      conditions.push(gte(min(classSections.date), new Date(startDate)))
+    if (endDate)
+      conditions.push(lte(max(classSections.date), new Date(endDate)))
 
     const result = await ctx.db
       .select({
-        id: classes.id,
-        code: classes.code,
-        subject: subjects.name,
-        teacher: users.name,
-        room: rooms.name,
-        status: classes.status,
-        date: classes.date,
-        startTime: classes.startTime,
-        endTime: classes.endTime,
+        code: classSections.code,
+        status: min(classSections.status),
+        subject: min(subjects.name),
+        teachers: sql<string[]>`array_agg(distinct ${users.name})`,
+        rooms: sql<string[]>`array_agg(distinct ${rooms.name})`,
+        startDate: min(classSections.date),
+        endDate: max(classSections.date),
+        totalSection: sql<number>`count(${classSections.code})`.mapWith(Number),
       })
-      .from(classes)
-      .where(and(...whereClause))
-      .limit(input.limit)
-      .offset((input.page - 1) * input.limit)
-      .orderBy(desc(classes.date))
-      .innerJoin(subjects, eq(subjects.id, classes.subjectId))
-      .innerJoin(teachers, eq(teachers.id, classes.teacherId))
+      .from(classSections)
+      .where(and(...conditions))
+      .innerJoin(subjects, eq(subjects.id, classSections.subjectId))
+      .innerJoin(teachers, eq(teachers.id, classSections.teacherId))
       .innerJoin(users, eq(users.id, teachers.userId))
-      .innerJoin(rooms, eq(rooms.id, classes.roomId))
-    const totalItems = await ctx.db.$count(classes)
+      .innerJoin(rooms, eq(rooms.id, classSections.roomId))
+      .groupBy(classSections.code)
+      .limit(limit)
+      .offset((page - 1) * limit)
+
+    const [{ total } = { total: 0 }] = await ctx.db.execute<{ total: number }>(
+      sql`select count(distinct ${classSections.code}) as total from ${classSections}`,
+    )
 
     return {
       classes: result,
-      total: totalItems,
-      page: input.page,
-      totalPages: Math.ceil(totalItems / input.limit),
+      total: parseInt(total.toString(), 10),
+      page,
+      totalPages: Math.ceil(total / limit),
     }
   }),
 
@@ -78,7 +86,7 @@ export const classSectionRouter = {
           })),
       )
 
-      await ctx.db.insert(classes).values(classSessions)
+      await ctx.db.insert(classSections).values(classSessions)
     }),
 
   update: adminProcedure
@@ -87,13 +95,13 @@ export const classSectionRouter = {
       const { id, date, ...data } = input
 
       await ctx.db
-        .update(classes)
+        .update(classSections)
         .set({ ...data, date: date ? new Date(date) : undefined })
-        .where(eq(classes.id, id))
+        .where(eq(classSections.id, id))
     }),
 
   delete: adminProcedure.input(byIdSchema).mutation(async ({ ctx, input }) => {
-    await ctx.db.delete(classes).where(eq(classes.id, input.id))
+    await ctx.db.delete(classSections).where(eq(classSections.id, input.id))
   }),
 } satisfies TRPCRouterRecord
 
