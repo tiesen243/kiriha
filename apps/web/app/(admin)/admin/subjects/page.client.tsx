@@ -17,6 +17,7 @@ import {
   TableRow,
 } from '@kiriha/ui/table'
 
+import { LoadingRows } from '@/app/(admin)/_components/loading-rows'
 import { subjectsSearchParams } from '@/app/(admin)/admin/subjects/page.lib'
 import { useTRPC } from '@/trpc/react'
 
@@ -34,21 +35,13 @@ export const SubjectTable: React.FC = () => {
       <SubjectTableHeader />
 
       <TableBody>
-        {status !== 'success'
-          ? Array.from({ length: options.limit }, (_, idx) => (
-              <TableRow key={idx} className='h-14'>
-                {Array.from({ length: 6 }, (_, cellIdx) => (
-                  <TableCell key={cellIdx}>
-                    <div className='animate-pulse rounded-sm bg-muted-foreground'>
-                      &nbsp;
-                    </div>
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          : data.subjects.map((subject) => (
-              <SubjectTableRow key={subject.id} subject={subject} />
-            ))}
+        {status !== 'success' ? (
+          <LoadingRows rows={options.limit} cells={6} />
+        ) : (
+          data.subjects.map((subject) => (
+            <SubjectTableRow key={subject.id} subject={subject} />
+          ))
+        )}
       </TableBody>
 
       <TableFooter>

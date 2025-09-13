@@ -17,6 +17,7 @@ import {
   TableRow,
 } from '@kiriha/ui/table'
 
+import { LoadingRows } from '@/app/(admin)/_components/loading-rows'
 import { roomsSearchParams } from '@/app/(admin)/admin/rooms/page.lib'
 import { useTRPC } from '@/trpc/react'
 
@@ -32,21 +33,11 @@ export const RoomTable: React.FC = () => {
       <RoomTableHeader />
 
       <TableBody>
-        {status !== 'success'
-          ? Array.from({ length: options.limit }, (_, idx) => (
-              <TableRow key={idx} className='h-14'>
-                {Array.from({ length: 6 }, (_, cellIdx) => (
-                  <TableCell key={cellIdx}>
-                    <div className='animate-pulse rounded-sm bg-muted-foreground'>
-                      &nbsp;
-                    </div>
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          : data.rooms.map((room) => (
-              <RoomTableRow key={room.id} room={room} />
-            ))}
+        {status !== 'success' ? (
+          <LoadingRows rows={options.limit} cells={6} />
+        ) : (
+          data.rooms.map((room) => <RoomTableRow key={room.id} room={room} />)
+        )}
       </TableBody>
 
       <TableFooter>

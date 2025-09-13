@@ -54,12 +54,12 @@ export function AdminSidebar(props: AdminSidebarProps) {
               <Link href='/admin'>
                 <Image
                   src='/assets/logo.svg'
-                  alt='Attendify'
+                  alt='Kiriha'
                   width={20}
                   height={20}
                   className='size-5 dark:invert'
                 />
-                <span className='text-base font-semibold'>Attendify</span>
+                <span className='text-base font-semibold'>Kiriha</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -117,7 +117,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
       </SidebarContent>
 
       <SidebarFooter className='flex-row items-center justify-between border-t text-sm'>
-        <p>&copy; {new Date().getFullYear()} Attendify.</p>
+        <p>&copy; {new Date().getFullYear()} Kiriha.</p>
         <ThemeToggle />
       </SidebarFooter>
     </Sidebar>
