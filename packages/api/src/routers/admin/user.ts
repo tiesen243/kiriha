@@ -64,6 +64,7 @@ export const userRouter = {
             ? { teacherId: teachers.id }
             : {}),
         id: users.id,
+        cardId: users.cardId,
         name: users.name,
         email: users.email,
         createdAt: users.createdAt,

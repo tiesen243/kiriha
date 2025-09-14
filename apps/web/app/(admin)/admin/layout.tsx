@@ -7,6 +7,7 @@ import { Toaster } from '@kiriha/ui/sonner'
 
 import { AdminSidebar } from '@/app/(admin)/_components/admin-sidebar'
 import { Header } from '@/app/(admin)/_components/header'
+import { createMetadata } from '@/lib/metadata'
 
 export default async function AdminLayout({ children }: LayoutProps<'/'>) {
   const session = await auth({ headers: await headers() })
@@ -33,3 +34,7 @@ export default async function AdminLayout({ children }: LayoutProps<'/'>) {
     </SidebarProvider>
   )
 }
+
+export const metadata = createMetadata({
+  title: 'Admin',
+})
