@@ -26,10 +26,8 @@ export const UserTable: React.FC<{ role: 'admin' | 'teacher' | 'student' }> = ({
 }) => {
   const [options, setOptions] = useQueryStates(usersSearchParams)
 
-  const { trpc } = useTRPC()
-  const { data, status } = useQuery(
-    trpc.admin.user.byRole.queryOptions({ role }),
-  )
+  const trpc = useTRPC()
+  const { data, status } = useQuery(trpc.user.all.queryOptions({ role }))
 
   return (
     <Table>
@@ -45,11 +43,7 @@ export const UserTable: React.FC<{ role: 'admin' | 'teacher' | 'student' }> = ({
 
       <TableFooter>
         <TableRow>
-          <TableCell>
-            Total: {status === 'success' ? data.total : 0} users
-          </TableCell>
-
-          <TableCell colSpan={6}>
+          <TableCell colSpan={7}>
             <UserTablePagination
               page={options.page}
               totalPages={status === 'success' ? data.totalPages : 1}
@@ -77,7 +71,7 @@ const UserTableHeader: React.FC = () => (
 )
 
 const UserTableRow: React.FC<{
-  user: RouterOutputs['admin']['user']['byRole']['users'][number]
+  user: RouterOutputs['user']['all']['users'][number]
 }> = ({ user }) => (
   <TableRow className='h-14'>
     <TableCell>{user.id}</TableCell>

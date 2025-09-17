@@ -1,16 +1,17 @@
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
+import { lazy } from '@trpc/server'
 
 import { createTRPCRouter, publicProcedure } from '../trpc'
 
 const appRouter = createTRPCRouter({
   health: publicProcedure.query(() => ({ message: 'OK' })),
 
-  nfc: (await import('./nfc')).nfcRouter,
+  nfc: lazy(() => import('./nfc')),
+  subject: lazy(() => import('./subject')),
+  user: lazy(() => import('./user')),
 
   class: (await import('./admin/class-section')).classSectionRouter,
   room: (await import('./admin/room')).roomRouter,
-  subject: (await import('./admin/subject')).subjectRouter,
-  user: (await import('./user')).userRouter,
 })
 
 type AppRouter = typeof appRouter

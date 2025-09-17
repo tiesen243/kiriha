@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useQueryStates } from 'nuqs'
 
 import type { RouterOutputs } from '@kiriha/api'
@@ -24,10 +24,8 @@ import { useTRPC } from '@/trpc/react'
 export const SubjectTable: React.FC = () => {
   const [options, setOptions] = useQueryStates(subjectsSearchParams)
 
-  const { trpc } = useTRPC()
-  const { data, status } = useQuery(
-    trpc.admin.subject.all.queryOptions(options),
-  )
+  const trpc = useTRPC()
+  const { data, status } = useQuery(trpc.subject.all.queryOptions(options))
 
   return (
     <Table>
@@ -77,15 +75,15 @@ const SubjectTableHeader: React.FC = () => (
 )
 
 const SubjectTableRow: React.FC<{
-  subject: RouterOutputs['admin']['subject']['all']['subjects'][number]
+  subject: RouterOutputs['subject']['all']['subjects'][number]
 }> = ({ subject }) => {
-  const { trpc, queryClient } = useTRPC()
+  const trpc = useTRPC()
+  const queryClient = useQueryClient()
+
   const deleteSubject = useMutation(
-    trpc.admin.subject.delete.mutationOptions({
+    trpc.subject.delete.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(
-          trpc.admin.subject.all.queryFilter(),
-        )
+        await queryClient.invalidateQueries(trpc.subject.all.queryFilter())
       },
     }),
   )

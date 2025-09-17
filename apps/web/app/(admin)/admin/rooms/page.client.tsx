@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useQueryStates } from 'nuqs'
 
 import type { RouterOutputs } from '@kiriha/api'
@@ -24,8 +24,8 @@ import { useTRPC } from '@/trpc/react'
 export const RoomTable: React.FC = () => {
   const [options, setOptions] = useQueryStates(roomsSearchParams)
 
-  const { trpc } = useTRPC()
-  const { data, status } = useQuery(trpc.admin.room.all.queryOptions(options))
+  const trpc = useTRPC()
+  const { data, status } = useQuery(trpc.room.all.queryOptions(options))
 
   return (
     <Table>
@@ -73,14 +73,14 @@ const RoomTableHeader: React.FC = () => (
 )
 
 const RoomTableRow: React.FC<{
-  room: RouterOutputs['admin']['room']['all']['rooms'][number]
+  room: RouterOutputs['room']['all']['rooms'][number]
 }> = ({ room }) => {
-  const { trpc, queryClient } = useTRPC()
+  const queryClient = useQueryClient()
+  const trpc = useTRPC()
   const deleteRoom = useMutation(
-    trpc.admin.room.delete.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.admin.room.all.queryFilter())
-      },
+    trpc.room.delete.mutationOptions({
+      onSuccess: () =>
+        queryClient.invalidateQueries(trpc.room.all.queryFilter()),
     }),
   )
 

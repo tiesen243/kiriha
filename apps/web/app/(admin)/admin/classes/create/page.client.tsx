@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
 
 import type { RouterOutputs } from '@kiriha/api'
 import type { CreateInput } from '@kiriha/validators/admin/class-section'
@@ -44,14 +45,16 @@ import {
   dateOfWeekMap,
 } from '@kiriha/validators/admin/class-section'
 
-import { useTRPC } from '@/trpc/react'
+import { useTRPC, useTRPCClient } from '@/trpc/react'
 
 export const CreateClassForm: React.FC<{
-  subjects: RouterOutputs['admin']['subject']['all']['subjects']
-  teachers: RouterOutputs['admin']['user']['byRole']['users']
-  rooms: RouterOutputs['admin']['room']['all']['rooms']
+  subjects: RouterOutputs['subject']['all']['subjects']
+  teachers: RouterOutputs['user']['all']['users']
+  rooms: RouterOutputs['room']['all']['rooms']
 }> = ({ subjects, teachers, rooms }) => {
-  const { trpc, trpcClient, queryClient } = useTRPC()
+  const queryClient = useQueryClient()
+  const trpcClient = useTRPCClient()
+  const trpc = useTRPC()
   const router = useRouter()
 
   const [open, setOpen] = useState(false)
@@ -66,9 +69,9 @@ export const CreateClassForm: React.FC<{
       schedules: [],
     } as CreateInput,
     validator: createSchema,
-    onSubmit: trpcClient.admin.class.create.mutate,
+    onSubmit: trpcClient.class.create.mutate,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(trpc.admin.class.all.queryFilter())
+      await queryClient.invalidateQueries(trpc.class.all.queryFilter())
       router.push('/admin/classes')
     },
     onError: (error) => {
@@ -121,7 +124,10 @@ export const CreateClassForm: React.FC<{
                 {teachers.map(
                   (teacher) =>
                     'teacherId' in teacher && (
-                      <SelectItem key={teacher.id} value={teacher.teacherId}>
+                      <SelectItem
+                        key={teacher.id}
+                        value={teacher.teacherId ?? ''}
+                      >
                         {teacher.name}
                       </SelectItem>
                     ),

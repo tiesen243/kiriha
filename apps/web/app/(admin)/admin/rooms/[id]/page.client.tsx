@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
 
 import type { RouterOutputs } from '@kiriha/api'
 import { Button } from '@kiriha/ui/button'
@@ -14,20 +15,22 @@ import {
 import { Input } from '@kiriha/ui/input'
 import { updateSchema } from '@kiriha/validators/admin/room'
 
-import { useTRPC } from '@/trpc/react'
+import { useTRPC, useTRPCClient } from '@/trpc/react'
 
 export const EditRoomForm: React.FC<{
-  room: RouterOutputs['admin']['room']['byId']
+  room: RouterOutputs['room']['byId']
 }> = ({ room }) => {
-  const { trpc, trpcClient, queryClient } = useTRPC()
+  const queryClient = useQueryClient()
+  const trpcClient = useTRPCClient()
+  const trpc = useTRPC()
   const router = useRouter()
 
   const { control, handleSubmit, state } = useForm({
     defaultValues: { id: room.id, name: room.name, capacity: room.capacity },
     validator: updateSchema,
-    onSubmit: trpcClient.admin.room.update.mutate,
+    onSubmit: trpcClient.room.update.mutate,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(trpc.admin.room.all.queryFilter())
+      await queryClient.invalidateQueries(trpc.room.all.queryFilter())
       router.push('/admin/rooms')
     },
   })

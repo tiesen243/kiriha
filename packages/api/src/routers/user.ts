@@ -1,11 +1,9 @@
-import type { TRPCRouterRecord } from '@trpc/server'
-
 import { UserModel } from '@kiriha/validators/user'
 
 import { UserService } from '../services/user'
-import { adminProcedure } from '../trpc'
+import { adminProcedure, createTRPCRouter } from '../trpc'
 
-export const userRouter = {
+export const userRouter = createTRPCRouter({
   all: adminProcedure
     .input(UserModel.manyQuery)
     .query(async ({ input }) => UserService.findMany(input)),
@@ -25,4 +23,4 @@ export const userRouter = {
   delete: adminProcedure
     .input(UserModel.oneQuery)
     .mutation(async ({ input }) => UserService.delete(input)),
-} satisfies TRPCRouterRecord
+})

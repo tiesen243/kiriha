@@ -1,7 +1,6 @@
 {
   "extends": "@kiriha/tsconfig/next.json",
   "compilerOptions": {
-    "lib": ["ES2024"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]

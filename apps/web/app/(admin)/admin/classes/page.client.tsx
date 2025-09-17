@@ -16,8 +16,8 @@ import { LoadingRows } from '@/app/(admin)/_components/loading-rows'
 import { useTRPC } from '@/trpc/react'
 
 export const ClassTable: React.FC = () => {
-  const { trpc } = useTRPC()
-  const { data, status } = useQuery(trpc.admin.class.all.queryOptions({}))
+  const trpc = useTRPC()
+  const { data, status } = useQuery(trpc.class.all.queryOptions({}))
 
   return (
     <Table>

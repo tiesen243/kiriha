@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { Button } from '@kiriha/ui/button'
 import {
@@ -11,20 +12,22 @@ import {
   useForm,
 } from '@kiriha/ui/form'
 import { Input } from '@kiriha/ui/input'
-import { createSchema } from '@kiriha/validators/admin/subject'
+import { SubjectModel } from '@kiriha/validators/subject'
 
-import { useTRPC } from '@/trpc/react'
+import { useTRPC, useTRPCClient } from '@/trpc/react'
 
 export const CreateSubjectForm: React.FC = () => {
-  const { trpc, trpcClient, queryClient } = useTRPC()
+  const queryClient = useQueryClient()
+  const trpcClient = useTRPCClient()
+  const trpc = useTRPC()
   const router = useRouter()
 
   const { control, handleSubmit, state } = useForm({
     defaultValues: { name: '', credit: 2 },
-    validator: createSchema,
-    onSubmit: trpcClient.admin.subject.create.mutate,
+    validator: SubjectModel.createBody,
+    onSubmit: trpcClient.subject.create.mutate,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(trpc.admin.subject.all.queryFilter())
+      await queryClient.invalidateQueries(trpc.subject.all.queryFilter())
       router.push('/admin/subjects')
     },
   })

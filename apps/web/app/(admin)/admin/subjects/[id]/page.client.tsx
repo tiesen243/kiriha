@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
 
 import type { RouterOutputs } from '@kiriha/api'
 import { Button } from '@kiriha/ui/button'
@@ -12,26 +13,24 @@ import {
   useForm,
 } from '@kiriha/ui/form'
 import { Input } from '@kiriha/ui/input'
-import { updateSchema } from '@kiriha/validators/admin/subject'
+import { SubjectModel } from '@kiriha/validators/subject'
 
-import { useTRPC } from '@/trpc/react'
+import { useTRPC, useTRPCClient } from '@/trpc/react'
 
 export const EditSubjectForm: React.FC<{
-  subject: RouterOutputs['admin']['subject']['byId']
-}> = ({ subject }) => {
-  const { trpc, trpcClient, queryClient } = useTRPC()
+  subject: RouterOutputs['subject']['byId']
+}> = ({ subject: { id, name, credit } }) => {
+  const queryClient = useQueryClient()
+  const trpcClient = useTRPCClient()
+  const trpc = useTRPC()
   const router = useRouter()
 
   const { control, handleSubmit, state } = useForm({
-    defaultValues: {
-      id: subject.id,
-      name: subject.name,
-      credit: subject.credit,
-    },
-    validator: updateSchema,
-    onSubmit: trpcClient.admin.subject.update.mutate,
+    defaultValues: { id, name, credit },
+    validator: SubjectModel.updateBody,
+    onSubmit: trpcClient.subject.update.mutate,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(trpc.admin.subject.all.queryFilter())
+      await queryClient.invalidateQueries(trpc.subject.all.queryFilter())
       router.push('/admin/subjects')
     },
   })
