@@ -19,7 +19,7 @@
   },
   "prettier": "@kiriha/prettier-config",
   "dependencies": {
-    "zod": "^4.1.8"
+    "zod": "^4.1.9"
   },
   "devDependencies": {
     "@kiriha/eslint-config": "workspace:*",
