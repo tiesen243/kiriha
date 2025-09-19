@@ -12,7 +12,7 @@ import {
   useForm,
 } from '@kiriha/ui/form'
 import { Input } from '@kiriha/ui/input'
-import { createSchema } from '@kiriha/validators/admin/room'
+import { RoomModel } from '@kiriha/validators/room'
 
 import { useTRPC, useTRPCClient } from '@/trpc/react'
 
@@ -24,7 +24,7 @@ export const CreateRoomForm: React.FC = () => {
 
   const { control, handleSubmit, state } = useForm({
     defaultValues: { name: '', capacity: 0 },
-    validator: createSchema,
+    validator: RoomModel.createBody,
     onSubmit: trpcClient.room.create.mutate,
     onSuccess: async () => {
       await queryClient.invalidateQueries(trpc.room.all.queryFilter())

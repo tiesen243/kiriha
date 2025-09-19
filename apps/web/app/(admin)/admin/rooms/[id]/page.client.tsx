@@ -13,13 +13,13 @@ import {
   useForm,
 } from '@kiriha/ui/form'
 import { Input } from '@kiriha/ui/input'
-import { updateSchema } from '@kiriha/validators/admin/room'
+import { RoomModel } from '@kiriha/validators/room'
 
 import { useTRPC, useTRPCClient } from '@/trpc/react'
 
-export const EditRoomForm: React.FC<{
-  room: RouterOutputs['room']['byId']
-}> = ({ room }) => {
+export const EditRoomForm: React.FC<RouterOutputs['room']['byId']> = ({
+  room,
+}) => {
   const queryClient = useQueryClient()
   const trpcClient = useTRPCClient()
   const trpc = useTRPC()
@@ -27,7 +27,7 @@ export const EditRoomForm: React.FC<{
 
   const { control, handleSubmit, state } = useForm({
     defaultValues: { id: room.id, name: room.name, capacity: room.capacity },
-    validator: updateSchema,
+    validator: RoomModel.updateBody,
     onSubmit: trpcClient.room.update.mutate,
     onSuccess: async () => {
       await queryClient.invalidateQueries(trpc.room.all.queryFilter())

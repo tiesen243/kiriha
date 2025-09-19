@@ -23,8 +23,8 @@ import { useTRPC } from '@/trpc/react'
 
 export const RoomTable: React.FC = () => {
   const [options, setOptions] = useQueryStates(roomsSearchParams)
-
   const trpc = useTRPC()
+
   const { data, status } = useQuery(trpc.room.all.queryOptions(options))
 
   return (
@@ -77,6 +77,7 @@ const RoomTableRow: React.FC<{
 }> = ({ room }) => {
   const queryClient = useQueryClient()
   const trpc = useTRPC()
+
   const deleteRoom = useMutation(
     trpc.room.delete.mutationOptions({
       onSuccess: () =>

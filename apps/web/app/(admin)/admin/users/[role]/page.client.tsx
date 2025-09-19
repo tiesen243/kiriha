@@ -25,8 +25,8 @@ export const UserTable: React.FC<{ role: 'admin' | 'teacher' | 'student' }> = ({
   role,
 }) => {
   const [options, setOptions] = useQueryStates(usersSearchParams)
-
   const trpc = useTRPC()
+
   const { data, status } = useQuery(trpc.user.all.queryOptions({ role }))
 
   return (
@@ -43,7 +43,10 @@ export const UserTable: React.FC<{ role: 'admin' | 'teacher' | 'student' }> = ({
 
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={7}>
+          <TableCell>
+            Total: {status === 'success' ? data.total : 0} users
+          </TableCell>
+          <TableCell colSpan={6}>
             <UserTablePagination
               page={options.page}
               totalPages={status === 'success' ? data.totalPages : 1}

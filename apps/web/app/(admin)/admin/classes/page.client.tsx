@@ -17,7 +17,7 @@ import { useTRPC } from '@/trpc/react'
 
 export const ClassTable: React.FC = () => {
   const trpc = useTRPC()
-  const { data, status } = useQuery(trpc.class.all.queryOptions({}))
+  const { data, status } = useQuery(trpc.classSection.all.queryOptions({}))
 
   return (
     <Table>

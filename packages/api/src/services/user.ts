@@ -15,27 +15,56 @@ export abstract class UserService {
       )
     if (role) whereClauses.push(eq(users.role, role))
 
-    const usersList = await db
-      .select(this.userSelect)
+    const userList = db
+      .select({
+        id: users.id,
+        cardId: users.cardId,
+        ...(role === 'student' && { studentId: students.id }),
+        ...(role === 'teacher' && { teacherId: teachers.id }),
+
+        name: users.name,
+        email: users.email,
+        role: users.role,
+
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+      })
       .from(users)
       .where(and(...whereClauses))
-      .leftJoin(students, eq(students.userId, users.id))
-      .leftJoin(teachers, eq(teachers.userId, users.id))
-      .limit(query.limit)
+      .limit(limit)
       .offset((page - 1) * limit)
       .orderBy(desc(users.updatedAt))
-    const totalCount = await db.$count(users)
+    if (role === 'student')
+      userList.leftJoin(students, eq(students.userId, users.id))
+    else if (role === 'teacher')
+      userList.leftJoin(teachers, eq(teachers.userId, users.id))
+
+    const total = await db.$count(users, and(...whereClauses))
 
     return {
-      users: usersList,
+      users: await userList,
+      total,
       page,
-      totalPages: Math.ceil(totalCount / limit),
+      totalPages: Math.ceil(total / limit),
     }
   }
 
   static async findOne(query: UserModel.OneQuery) {
     const [user] = await db
-      .select(this.userSelect)
+      .select({
+        id: users.id,
+        cardId: users.cardId,
+        studentId: students.id,
+        teacherId: teachers.id,
+
+        name: users.name,
+        email: users.email,
+        role: users.role,
+        image: users.image,
+
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+      })
       .from(users)
       .where(eq(users.id, query.id))
       .leftJoin(students, eq(students.userId, users.id))
@@ -105,17 +134,5 @@ export abstract class UserService {
     return { userId: id }
   }
 
-  static userSelect = {
-    id: users.id,
-    cardId: users.cardId,
-    studentId: students.id,
-    teacherId: teachers.id,
-
-    name: users.name,
-    email: users.email,
-    role: users.role,
-
-    createdAt: users.createdAt,
-    updatedAt: users.updatedAt,
-  }
+  static userSelect = {}
 }

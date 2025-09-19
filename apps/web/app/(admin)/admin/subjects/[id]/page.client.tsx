@@ -17,9 +17,9 @@ import { SubjectModel } from '@kiriha/validators/subject'
 
 import { useTRPC, useTRPCClient } from '@/trpc/react'
 
-export const EditSubjectForm: React.FC<{
-  subject: RouterOutputs['subject']['byId']
-}> = ({ subject: { id, name, credit } }) => {
+export const EditSubjectForm: React.FC<RouterOutputs['subject']['byId']> = ({
+  subject: { id, name, credit },
+}) => {
   const queryClient = useQueryClient()
   const trpcClient = useTRPCClient()
   const trpc = useTRPC()

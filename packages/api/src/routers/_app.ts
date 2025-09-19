@@ -6,12 +6,11 @@ import { createTRPCRouter, publicProcedure } from '../trpc'
 const appRouter = createTRPCRouter({
   health: publicProcedure.query(() => ({ message: 'OK' })),
 
+  classSection: lazy(() => import('./class-section')),
   nfc: lazy(() => import('./nfc')),
+  room: lazy(() => import('./room')),
   subject: lazy(() => import('./subject')),
   user: lazy(() => import('./user')),
-
-  class: (await import('./admin/class-section')).classSectionRouter,
-  room: (await import('./admin/room')).roomRouter,
 })
 
 type AppRouter = typeof appRouter

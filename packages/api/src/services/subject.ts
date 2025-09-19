@@ -12,18 +12,26 @@ export abstract class SubjectService {
     if (search) whereClauses.push(ilike(subjects.name, search))
 
     const subjectList = await db
-      .select()
+      .select({
+        id: subjects.id,
+        code: subjects.code,
+        name: subjects.name,
+        credit: subjects.credit,
+        createdAt: subjects.createdAt,
+        updatedAt: subjects.updatedAt,
+      })
       .from(subjects)
       .where(and(...whereClauses))
       .limit(limit)
       .offset((page - 1) * limit)
       .orderBy(desc(subjects.updatedAt))
-    const totalItems = await db.$count(subjects)
+    const total = await db.$count(subjects, and(...whereClauses))
 
     return {
       subjects: subjectList,
+      total,
       page,
-      totalPages: Math.ceil(totalItems / limit),
+      totalPages: Math.ceil(total / limit),
     }
   }
 
@@ -31,7 +39,14 @@ export abstract class SubjectService {
     const { id } = query
 
     const [subject] = await db
-      .select()
+      .select({
+        id: subjects.id,
+        code: subjects.code,
+        name: subjects.name,
+        credit: subjects.credit,
+        createdAt: subjects.createdAt,
+        updatedAt: subjects.updatedAt,
+      })
       .from(subjects)
       .where(eq(subjects.id, id))
       .limit(1)

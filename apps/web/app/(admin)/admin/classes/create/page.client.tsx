@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { useQueryClient } from '@tanstack/react-query'
 
 import type { RouterOutputs } from '@kiriha/api'
-import type { CreateInput } from '@kiriha/validators/admin/class-section'
 import { Button } from '@kiriha/ui/button'
 import {
   Dialog,
@@ -32,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@kiriha/ui/select'
+import { toast } from '@kiriha/ui/sonner'
 import {
   Table,
   TableBody,
@@ -41,9 +41,9 @@ import {
   TableRow,
 } from '@kiriha/ui/table'
 import {
-  createSchema,
-  dateOfWeekMap,
-} from '@kiriha/validators/admin/class-section'
+  ClassSectionModel,
+  dayOfWeekMap,
+} from '@kiriha/validators/class-section'
 
 import { useTRPC, useTRPCClient } from '@/trpc/react'
 
@@ -59,7 +59,7 @@ export const CreateClassForm: React.FC<{
 
   const [open, setOpen] = useState(false)
 
-  const { control, handleSubmit, state } = useForm({
+  const { control, handleSubmit, state, setValue } = useForm({
     defaultValues: {
       subjectId: '',
       teacherId: '',
@@ -67,15 +67,15 @@ export const CreateClassForm: React.FC<{
       startDate: '',
       endDate: '',
       schedules: [],
-    } as CreateInput,
-    validator: createSchema,
-    onSubmit: trpcClient.class.create.mutate,
+    } as ClassSectionModel.CreateBody,
+    validator: ClassSectionModel.createBody,
+    onSubmit: trpcClient.classSection.create.mutate,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(trpc.class.all.queryFilter())
+      await queryClient.invalidateQueries(trpc.classSection.all.queryFilter())
       router.push('/admin/classes')
     },
     onError: (error) => {
-      console.error('Failed to create class:', error)
+      toast.error(error.message)
     },
   })
 
@@ -121,17 +121,14 @@ export const CreateClassForm: React.FC<{
               </FormControl>
 
               <SelectContent>
-                {teachers.map(
-                  (teacher) =>
-                    'teacherId' in teacher && (
-                      <SelectItem
-                        key={teacher.id}
-                        value={teacher.teacherId ?? ''}
-                      >
-                        {teacher.name}
-                      </SelectItem>
-                    ),
-                )}
+                {teachers.map((teacher) => (
+                  <SelectItem
+                    key={teacher.id}
+                    value={String(teacher.teacherId)}
+                  >
+                    {teacher.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <FormMessage />
@@ -196,7 +193,7 @@ export const CreateClassForm: React.FC<{
       <FormField
         control={control}
         name='schedules'
-        render={({ field, setValue }) => (
+        render={({ field }) => (
           <div className='grid gap-2'>
             <Dialog open={open} onOpenChange={setOpen}>
               <div className='flex items-center justify-between'>
@@ -216,8 +213,10 @@ export const CreateClassForm: React.FC<{
                   </DialogDescription>
                 </DialogHeader>
                 <ScheduleForm
-                  onSubmit={(schedule: CreateInput['schedules'][number]) => {
-                    setValue([...field.value, schedule])
+                  onSubmit={(
+                    schedule: ClassSectionModel.CreateBody['schedules'][number],
+                  ) => {
+                    setValue('schedules', [...field.value, schedule])
                     setOpen(false)
                   }}
                 />
@@ -238,10 +237,10 @@ export const CreateClassForm: React.FC<{
               <TableBody>
                 {field.value.map((schedule) => (
                   <TableRow
-                    key={`${schedule.dateOfWeek}-${schedule.startTime}-${schedule.endTime}`}
+                    key={`${schedule.dayOfWeek}-${schedule.startTime}-${schedule.endTime}`}
                   >
                     <TableCell>
-                      {dateOfWeekMap[schedule.dateOfWeek].name}
+                      {dayOfWeekMap[schedule.dayOfWeek].name}
                     </TableCell>
                     <TableCell>{schedule.startTime}</TableCell>
                     <TableCell>{schedule.endTime}</TableCell>
@@ -250,7 +249,10 @@ export const CreateClassForm: React.FC<{
                         variant='destructive'
                         size='sm'
                         onClick={() => {
-                          setValue(field.value.filter((s) => s !== schedule))
+                          setValue(
+                            'schedules',
+                            field.value.filter((s) => s !== schedule),
+                          )
                         }}
                       >
                         Remove
@@ -272,11 +274,13 @@ export const CreateClassForm: React.FC<{
 }
 
 const ScheduleForm: React.FC<{
-  onSubmit: (schedule: CreateInput['schedules'][number]) => void
+  onSubmit: (
+    schedule: ClassSectionModel.CreateBody['schedules'][number],
+  ) => void
 }> = ({ onSubmit }) => {
   const { control, handleSubmit } = useForm({
-    defaultValues: { startTime: '', endTime: '', dateOfWeek: 'mon' },
-    validator: createSchema.shape.schedules.element,
+    defaultValues: { startTime: '', endTime: '', dayOfWeek: 'mon' },
+    validator: ClassSectionModel.createBody.shape.schedules.element,
     onSubmit,
   })
 
@@ -285,7 +289,7 @@ const ScheduleForm: React.FC<{
       <div className='grid gap-4'>
         <FormField
           control={control}
-          name='dateOfWeek'
+          name='dayOfWeek'
           render={({ field }) => (
             <div className='grid gap-2'>
               <FormLabel>Date of Week</FormLabel>
@@ -297,9 +301,9 @@ const ScheduleForm: React.FC<{
                 </FormControl>
 
                 <SelectContent>
-                  {Object.keys(dateOfWeekMap).map((day) => (
+                  {Object.keys(dayOfWeekMap).map((day) => (
                     <SelectItem key={day} value={day}>
-                      {dateOfWeekMap[day as keyof typeof dateOfWeekMap].name}
+                      {dayOfWeekMap[day as keyof typeof dayOfWeekMap].name}
                     </SelectItem>
                   ))}
                 </SelectContent>

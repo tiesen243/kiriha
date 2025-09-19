@@ -77,8 +77,8 @@ const SubjectTableHeader: React.FC = () => (
 const SubjectTableRow: React.FC<{
   subject: RouterOutputs['subject']['all']['subjects'][number]
 }> = ({ subject }) => {
-  const trpc = useTRPC()
   const queryClient = useQueryClient()
+  const trpc = useTRPC()
 
   const deleteSubject = useMutation(
     trpc.subject.delete.mutationOptions({

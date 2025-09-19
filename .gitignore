@@ -89,3 +89,6 @@ next-env.d.ts
 
 # vscode
 .vscode/
+
+# Turborepo
+.turbo

@@ -3,9 +3,9 @@ import { api } from '@/trpc/rsc'
 
 export default async function CreateClassPage() {
   const [teachers, subjects, rooms] = await Promise.all([
-    api.user.all({ role: 'teacher', limit: 999 }),
-    api.subject.all({ limit: 999 }),
-    api.room.all({ limit: 999 }),
+    api.user.all({ role: 'teacher', limit: 100 }),
+    api.subject.all({ limit: 100 }),
+    api.room.all({ limit: 100 }),
   ])
 
   return (
