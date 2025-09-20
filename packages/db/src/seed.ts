@@ -1,63 +1,83 @@
-import { db, sql } from '.'
-import { rooms, students, subjects, teachers, users } from './schema'
+import { seed } from 'drizzle-seed'
+
+import { Password } from '@kiriha/auth'
+import { env } from '@kiriha/validators/env'
+
+import { db, eq } from '.'
+import { accounts, rooms, students, subjects, teachers, users } from './schema'
 
 async function main() {
-  await db.execute(sql`SELECT 1`)
+  await seed(db, { rooms, subjects, users }).refine((f) => ({
+    subjects: {
+      columns: {
+        name: f.jobTitle(),
+        credit: f.int({ minValue: 2, maxValue: 4 }),
+      },
+      count: 50,
+    },
+    rooms: {
+      columns: {
+        name: f.valuesFromArray({
+          values: Array.from({ length: 100 }, () => {
+            const building = String.fromCharCode(
+              65 + Math.floor(Math.random() * 26),
+            )
+            const floor = String(Math.floor(Math.random() * 100)).padStart(
+              2,
+              '0',
+            )
+            const room = String(Math.floor(Math.random() * 100)).padStart(
+              2,
+              '0',
+            )
+            return `${building}${floor}${room}`
+          }),
+        }),
+        capacity: f.int({ minValue: 20, maxValue: 100 }),
+      },
+      count: 50,
+    },
+    users: {
+      columns: {
+        name: f.fullName(),
+        email: f.email(),
+        role: f.valuesFromArray({
+          values: [
+            { weight: 0.8, values: ['student'] },
+            { weight: 0.2, values: ['teacher'] },
+          ],
+        }),
+      },
+      count: 100,
+    },
+  }))
 
-  const newStudents = await db
-    .insert(users)
-    .values([
-      { name: 'Alice Johnson', role: 'student' },
-      { name: 'Bob Smith', role: 'student' },
-      { name: 'Charlie Brown', role: 'student' },
-      { name: 'Diana Prince', role: 'student' },
-      { name: 'Ethan Hunt', role: 'student' },
-    ])
-    .returning()
+  const studentList = await db
+    .select()
+    .from(users)
+    .where(eq(users.role, 'student'))
   await db
     .insert(students)
-    .values(newStudents.map((user) => ({ userId: user.id })))
+    .values(studentList.map((user) => ({ userId: user.id })))
 
-  const newTeachers = await db
-    .insert(users)
-    .values([
-      { name: 'Professor Xavier', role: 'teacher' },
-      { name: 'Dr. Strange', role: 'teacher' },
-    ])
-    .returning()
+  const teacherList = await db
+    .select()
+    .from(users)
+    .where(eq(users.role, 'teacher'))
   await db
     .insert(teachers)
-    .values(newTeachers.map((user) => ({ userId: user.id })))
+    .values(teacherList.map((user) => ({ userId: user.id })))
 
-  await db.insert(rooms).values([
-    { name: 'I0735', capacity: 52 },
-    { name: 'E0111', capacity: 109 },
-    { name: 'R0345', capacity: 42 },
-    { name: 'C0243', capacity: 177 },
-    { name: 'I0125', capacity: 78 },
-    { name: 'U0416', capacity: 168 },
-    { name: 'H0442', capacity: 115 },
-    { name: 'J0335', capacity: 158 },
-    { name: 'P0906', capacity: 66 },
-    { name: 'Y0303', capacity: 132 },
-  ])
-
-  await db
-    .insert(subjects)
-    .values(
-      [
-        'Mathematics',
-        'Data Structures and Algorithms',
-        'Operating Systems',
-        'Database Systems',
-        'Computer Networks',
-        'Software Engineering',
-        'Artificial Intelligence',
-        'Machine Learning',
-        'Web Development',
-        'Mobile App Development',
-      ].map((name) => ({ name, credit: Math.floor(Math.random() * 3) + 2 })),
-    )
+  const userList = await db.select().from(users)
+  const passwordHash = await Password.hash(env.DEFAULT_PASSWORD)
+  await db.insert(accounts).values(
+    userList.map((user) => ({
+      userId: user.id,
+      provider: 'credentials',
+      accountId: user.id,
+      password: passwordHash,
+    })),
+  )
 }
 
 main()

@@ -8,7 +8,7 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/pg-core'
 
-import { generateId, generateSubjectCode, generateUserCode } from './utils'
+import { generateSubjectCode, generateUserCode } from './utils'
 
 /**
  * ENUMS
@@ -39,12 +39,8 @@ const updatedAt = timestamp({ mode: 'date', withTimezone: true })
  * USERS
  * --------------------------------------------------------------
  */
-export const users = pgTable('user', (t) => ({
-  id: t
-    .varchar({ length: 24 })
-    .primaryKey()
-    .$defaultFn(() => generateId())
-    .notNull(),
+export const users = pgTable('users', (t) => ({
+  id: t.uuid().primaryKey().defaultRandom().notNull(),
   cardId: t.varchar({ length: 32 }).unique(),
 
   role: roleEnums().default('student'),
@@ -72,7 +68,7 @@ export const usersRelations = relations(users, ({ many }) => ({
  * Link to users table via userId
  */
 export const students = pgTable(
-  'student',
+  'students',
   (t) => ({
     id: t
       .varchar({ length: 10 })
@@ -80,7 +76,7 @@ export const students = pgTable(
       .primaryKey()
       .notNull(),
     userId: t
-      .varchar({ length: 24 })
+      .uuid()
       .unique()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
@@ -95,15 +91,15 @@ export const studentRelations = relations(students, ({ one, many }) => ({
 }))
 
 export const teachers = pgTable(
-  'teacher',
+  'teachers',
   (t) => ({
     id: t
-      .varchar({ length: 24 })
+      .varchar({ length: 10 })
+      .$defaultFn(() => generateUserCode())
       .primaryKey()
-      .$defaultFn(() => generateId())
       .notNull(),
     userId: t
-      .varchar({ length: 24 })
+      .uuid()
       .unique()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
@@ -124,12 +120,12 @@ export const teacherRelations = relations(teachers, ({ one, many }) => ({
  * - Sessions manage user login states
  */
 export const accounts = pgTable(
-  'account',
+  'accounts',
   (t) => ({
     provider: t.varchar({ length: 255 }).notNull(),
     accountId: t.varchar({ length: 255 }).notNull(),
     userId: t
-      .varchar({ length: 24 })
+      .uuid()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
     password: t.varchar({ length: 255 }),
@@ -145,12 +141,12 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 }))
 
 export const sessions = pgTable(
-  'session',
+  'sessions',
   (t) => ({
     token: t.varchar({ length: 255 }).primaryKey().notNull(),
     expires: t.timestamp({ mode: 'date', withTimezone: true }).notNull(),
     userId: t
-      .varchar({ length: 24 })
+      .uuid()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
   }),
@@ -170,12 +166,8 @@ export const sessionRelations = relations(sessions, ({ one }) => ({
  * - Enrollments link students to classes with a composite primary key
  * - Attendances track student presence in classes with unique constraints to prevent duplicates
  */
-export const rooms = pgTable('room', (t) => ({
-  id: t
-    .varchar({ length: 24 })
-    .primaryKey()
-    .$defaultFn(() => generateId())
-    .notNull(),
+export const rooms = pgTable('rooms', (t) => ({
+  id: t.uuid().primaryKey().defaultRandom().notNull(),
   name: t.varchar({ length: 255 }).notNull(),
   capacity: t.integer().notNull(),
   createdAt,
@@ -186,18 +178,14 @@ export const roomsRelations = relations(rooms, ({ many }) => ({
   classes: many(classSections),
 }))
 
-export const subjects = pgTable('subject', (t) => ({
-  id: t
-    .varchar({ length: 24 })
-    .primaryKey()
-    .$defaultFn(() => generateId())
-    .notNull(),
-  name: t.varchar({ length: 255 }).notNull(),
+export const subjects = pgTable('subjects', (t) => ({
+  id: t.uuid().primaryKey().defaultRandom().notNull(),
   code: t
     .varchar({ length: 7 })
     .$defaultFn(() => generateSubjectCode())
     .unique()
     .notNull(),
+  name: t.varchar({ length: 255 }).notNull(),
   credit: t.integer().notNull(),
   createdAt,
   updatedAt,
@@ -208,24 +196,20 @@ export const subjectRelations = relations(subjects, ({ many }) => ({
 }))
 
 export const classSections = pgTable(
-  'class_section',
+  'class_sections',
   (t) => ({
-    id: t
-      .varchar({ length: 24 })
-      .primaryKey()
-      .$defaultFn(() => generateId())
-      .notNull(),
+    id: t.uuid().primaryKey().defaultRandom().notNull(),
     code: t.varchar({ length: 12 }).notNull(),
     subjectId: t
-      .varchar({ length: 24 })
+      .uuid()
       .notNull()
       .references(() => subjects.id, { onDelete: 'restrict' }),
     teacherId: t
-      .varchar({ length: 24 })
+      .varchar({ length: 10 })
       .notNull()
       .references(() => teachers.id, { onDelete: 'restrict' }),
     roomId: t
-      .varchar({ length: 24 })
+      .uuid()
       .notNull()
       .references(() => rooms.id, { onDelete: 'restrict' }),
     status: classStatusEnums().default('waiting').notNull(),
@@ -260,14 +244,14 @@ export const classRelations = relations(classSections, ({ one, many }) => ({
 }))
 
 export const enrollments = pgTable(
-  'enrollment',
+  'enrollments',
   (t) => ({
     studentId: t
       .varchar({ length: 10 })
       .notNull()
       .references(() => students.id, { onDelete: 'cascade' }),
     classId: t
-      .varchar({ length: 24 })
+      .uuid()
       .notNull()
       .references(() => classSections.id, { onDelete: 'cascade' }),
   }),
@@ -288,15 +272,11 @@ export const enrollmentRelations = relations(enrollments, ({ one }) => ({
 }))
 
 export const attendances = pgTable(
-  'attendance',
+  'attendances',
   (t) => ({
-    id: t
-      .varchar({ length: 24 })
-      .primaryKey()
-      .$defaultFn(() => generateId())
-      .notNull(),
+    id: t.uuid().primaryKey().defaultRandom().notNull(),
     classId: t
-      .varchar({ length: 24 })
+      .uuid()
       .notNull()
       .references(() => classSections.id, { onDelete: 'cascade' }),
     studentId: t
