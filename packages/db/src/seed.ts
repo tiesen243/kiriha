@@ -3,13 +3,16 @@ import { seed } from 'drizzle-seed'
 import { Password } from '@kiriha/auth'
 import { env } from '@kiriha/validators/env'
 
-import { db, eq } from '.'
+import { db, eq, generateSubjectCode } from '.'
 import { accounts, rooms, students, subjects, teachers, users } from './schema'
 
 async function main() {
   await seed(db, { rooms, subjects, users }).refine((f) => ({
     subjects: {
       columns: {
+        code: f.valuesFromArray({
+          values: Array.from({ length: 100 }, () => generateSubjectCode()),
+        }),
         name: f.jobTitle(),
         credit: f.int({ minValue: 2, maxValue: 4 }),
       },

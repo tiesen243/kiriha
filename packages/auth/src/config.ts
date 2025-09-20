@@ -48,7 +48,7 @@ function getAdapter(): AuthOptions['adapter'] {
         .where(eq(students.id, indentifier))
         .limit(1)
         .innerJoin(users, eq(students.userId, users.id))
-      if (student?.user) return student.user
+      if (student?.users) return student.users
 
       const [teacher] = await db
         .select()
@@ -56,7 +56,7 @@ function getAdapter(): AuthOptions['adapter'] {
         .where(eq(teachers.id, indentifier))
         .limit(1)
         .innerJoin(users, eq(teachers.userId, users.id))
-      if (teacher?.user) return teacher.user
+      if (teacher?.users) return teacher.users
 
       return null
     },
