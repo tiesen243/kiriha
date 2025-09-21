@@ -14,6 +14,10 @@ import { dayOfWeekMap } from '@kiriha/validators/class-section'
 export abstract class ClassSectionService {
   static async findMany(query: ClassSectionModel.ManyQuery) {
     const { page, limit, subjectId, startDate, endDate } = query
+    const cacheKey = JSON.stringify(['findMany', query])
+
+    const cached = this.caches.get(cacheKey) as typeof result | undefined
+    if (cached) return cached
 
     const whereClauses = []
     if (subjectId)
@@ -49,12 +53,14 @@ export abstract class ClassSectionService {
       sql`select count(distinct ${classSections.code}) as total from ${classSections}`,
     )
 
-    return {
+    const result = {
       classes: classList,
       total: parseInt(total.toString(), 10),
       page,
       totalPages: Math.ceil(total / limit),
     }
+    this.caches.set(cacheKey, result)
+    return result
   }
 
   static async findOne(query: ClassSectionModel.OneQuery) {
@@ -152,4 +158,6 @@ export abstract class ClassSectionService {
     }
     return dates
   }
+
+  static caches = new Map<string, unknown>()
 }

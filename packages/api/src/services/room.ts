@@ -7,6 +7,10 @@ import { rooms } from '@kiriha/db/schema'
 export abstract class RoomService {
   static async findMany(query: RoomModel.ManyQuery) {
     const { search, page, limit } = query
+    const cacheKey = JSON.stringify(['findMany', query])
+
+    const cached = this.caches.get(cacheKey) as typeof result | undefined
+    if (cached) return cached
 
     const whereClauses = []
     if (search) whereClauses.push(ilike(rooms.name, search))
@@ -26,16 +30,22 @@ export abstract class RoomService {
       .orderBy(desc(rooms.updatedAt))
     const totalItems = await db.$count(rooms, and(...whereClauses))
 
-    return {
+    const result = {
       rooms: roomList,
       total: totalItems,
       page: page,
       totalPages: Math.ceil(totalItems / query.limit),
     }
+    this.caches.set(cacheKey, result)
+    return result
   }
 
   static async findOne(query: RoomModel.OneQuery) {
     const { id } = query
+    const cacheKey = JSON.stringify(['findOne', query])
+
+    const cached = this.caches.get(cacheKey) as typeof result | undefined
+    if (cached) return cached
 
     const [room] = await db
       .select()
@@ -45,7 +55,9 @@ export abstract class RoomService {
     if (!room)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Room not found' })
 
-    return { room }
+    const result = { room }
+    this.caches.set(cacheKey, result)
+    return result
   }
 
   static async create(data: RoomModel.CreateBody) {
@@ -101,4 +113,6 @@ export abstract class RoomService {
 
     return { roomId: id }
   }
+
+  static caches = new Map<string, unknown>()
 }

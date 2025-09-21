@@ -7,6 +7,10 @@ import { students, teachers, users } from '@kiriha/db/schema'
 export abstract class UserService {
   static async findMany(query: UserModel.ManyQuery) {
     const { search, role, limit, page } = query
+    const cacheKey = JSON.stringify(['findMany', query])
+
+    const cached = this.caches.get(cacheKey) as typeof result | undefined
+    if (cached) return cached
 
     const whereClauses = []
     if (search)
@@ -41,15 +45,23 @@ export abstract class UserService {
 
     const total = await db.$count(users, and(...whereClauses))
 
-    return {
+    const result = {
       users: await userList,
       total,
       page,
       totalPages: Math.ceil(total / limit),
     }
+    this.caches.set(cacheKey, result)
+    return result
   }
 
   static async findOne(query: UserModel.OneQuery) {
+    const { id } = query
+    const cacheKey = JSON.stringify(['findOne', query])
+
+    const cached = this.caches.get(cacheKey) as typeof result | undefined
+    if (cached) return cached
+
     const [user] = await db
       .select({
         id: users.id,
@@ -66,14 +78,16 @@ export abstract class UserService {
         updatedAt: users.updatedAt,
       })
       .from(users)
-      .where(eq(users.id, query.id))
+      .where(eq(users.id, id))
       .leftJoin(students, eq(students.userId, users.id))
       .leftJoin(teachers, eq(teachers.userId, users.id))
       .limit(1)
     if (!user)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' })
 
-    return { user }
+    const result = { user }
+    this.caches.set(cacheKey, result)
+    return result
   }
 
   static async create(data: UserModel.CreateBody) {
@@ -134,5 +148,5 @@ export abstract class UserService {
     return { userId: id }
   }
 
-  static userSelect = {}
+  static caches = new Map<string, unknown>()
 }

@@ -11,6 +11,7 @@ const createDrizzleClient = () => {
     password: env.POSTGRES_PASSWORD,
     host: env.POSTGRES_HOST,
     database: env.POSTGRES_DB,
+    idle_timeout: 30,
   })
   return drizzle(conn, { schema, casing: 'snake_case' })
 }

@@ -7,6 +7,10 @@ import { subjects } from '@kiriha/db/schema'
 export abstract class SubjectService {
   static async findMany(query: SubjectModel.ManyQuery) {
     const { search, page, limit } = query
+    const cacheKey = JSON.stringify(['findMany', query])
+
+    const cached = this.caches.get(cacheKey) as typeof result | undefined
+    if (cached) return cached
 
     const whereClauses = []
     if (search) whereClauses.push(ilike(subjects.name, search))
@@ -27,16 +31,22 @@ export abstract class SubjectService {
       .orderBy(desc(subjects.updatedAt))
     const total = await db.$count(subjects, and(...whereClauses))
 
-    return {
+    const result = {
       subjects: subjectList,
       total,
       page,
       totalPages: Math.ceil(total / limit),
     }
+    this.caches.set(cacheKey, result)
+    return result
   }
 
   static async findOne(query: SubjectModel.OneQuery) {
     const { id } = query
+    const cacheKey = JSON.stringify(['findOne', query])
+
+    const cached = this.caches.get(cacheKey) as typeof result | undefined
+    if (cached) return cached
 
     const [subject] = await db
       .select({
@@ -53,7 +63,9 @@ export abstract class SubjectService {
     if (!subject)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Subject not found' })
 
-    return { subject }
+    const result = { subject }
+    this.caches.set(cacheKey, result)
+    return result
   }
 
   static async create(data: SubjectModel.CreateBody) {
@@ -106,4 +118,6 @@ export abstract class SubjectService {
 
     return { subjectId: id }
   }
+
+  static caches = new Map<string, unknown>()
 }
