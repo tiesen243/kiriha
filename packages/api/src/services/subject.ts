@@ -85,6 +85,7 @@ export abstract class SubjectService {
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Failed to create subject',
       })
+    this.caches.clear()
 
     return { subjectId: newSubject.id }
   }
@@ -104,6 +105,7 @@ export abstract class SubjectService {
       .update(subjects)
       .set({ name, credit, updatedAt: new Date() })
       .where(eq(subjects.id, id))
+    this.caches.clear()
 
     return { subjectId: id }
   }
@@ -120,6 +122,7 @@ export abstract class SubjectService {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Subject not found' })
 
     await db.delete(subjects).where(eq(subjects.id, id))
+    this.caches.clear()
 
     return { subjectId: id }
   }

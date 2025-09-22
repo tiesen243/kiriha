@@ -130,6 +130,12 @@ export abstract class ClassSectionService {
         ),
       )
       .returning({ id: classSections.id })
+    if (insertedClassSections.length === 0)
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to create class sections',
+      })
+    this.caches.clear()
 
     return { numberOfSections: insertedClassSections.length }
   }
@@ -141,13 +147,28 @@ export abstract class ClassSectionService {
       .update(classSections)
       .set({ ...updateData, date: date ? new Date(date) : undefined })
       .where(eq(classSections.id, id))
+    this.caches.clear()
 
     return { classSectionId: id }
   }
 
   static async delete(query: ClassSectionModel.OneQuery) {
     const { id } = query
+
+    const [existingClassSection] = await db
+      .select()
+      .from(classSections)
+      .where(eq(classSections.id, id))
+      .limit(1)
+    if (!existingClassSection)
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Class section not found',
+      })
+
     await db.delete(classSections).where(eq(classSections.id, id))
+    this.caches.clear()
+
     return { classSectionId: id }
   }
 

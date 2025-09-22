@@ -77,6 +77,7 @@ export abstract class RoomService {
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Failed to create room',
       })
+    this.caches.clear()
 
     return { roomId: newRoom.id }
   }
@@ -99,6 +100,7 @@ export abstract class RoomService {
         capacity: capacity ?? existingRoom.capacity,
       })
       .where(eq(rooms.id, id))
+    this.caches.clear()
 
     return { roomId: id }
   }
@@ -115,6 +117,7 @@ export abstract class RoomService {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Room not found' })
 
     await db.delete(rooms).where(eq(rooms.id, id))
+    this.caches.clear()
 
     return { roomId: id }
   }

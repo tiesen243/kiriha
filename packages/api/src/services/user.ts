@@ -113,6 +113,8 @@ export abstract class UserService {
     else if (data.role === 'teacher')
       await db.insert(teachers).values({ userId: newUser.id })
 
+    this.caches.clear()
+
     return { userId: newUser.id }
   }
 
@@ -128,6 +130,7 @@ export abstract class UserService {
         code: 'NOT_FOUND',
         message: 'User not found',
       })
+    this.caches.clear()
 
     return { userId: updatedUser.id }
   }
@@ -149,6 +152,7 @@ export abstract class UserService {
       await db.delete(teachers).where(eq(teachers.userId, id))
 
     await db.delete(users).where(eq(users.id, id))
+    this.caches.clear()
 
     return { userId: id }
   }
