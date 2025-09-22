@@ -1,7 +1,7 @@
 import * as z from 'zod'
 
 export const loginSchema = z.object({
-  indentifier: z.union([z.email(), z.string().length(8)]),
+  indentifier: z.union([z.email(), z.string().length(10)]),
   password: z
     .string()
     .regex(

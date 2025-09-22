@@ -1,3 +1,12 @@
+export function createId(): string {
+  const prefix = 'c'
+  const ts = Date.now().toString(36).padStart(10, '0')
+  const rand = Array.from({ length: 13 }, () =>
+    Math.floor(Math.random() * 36).toString(36),
+  ).join('')
+  return `${prefix}${ts}${rand}`
+}
+
 export function generateUserCode(): string {
   const enrollYear = new Date().getFullYear()
   const yy = String(enrollYear).slice(-2)

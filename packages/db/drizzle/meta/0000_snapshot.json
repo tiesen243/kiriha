@@ -1,5 +1,5 @@
 {
-  "id": "93dc04ca-c846-4cd8-b6b7-86b5f1e25cea",
+  "id": "7a077072-b3e7-4e23-9af3-de3013bbfe17",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -22,7 +22,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": false,
           "notNull": true
         },
@@ -78,14 +78,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
         "class_id": {
           "name": "class_id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": false,
           "notNull": true
         },
@@ -201,10 +200,9 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
         "code": {
           "name": "code",
@@ -214,7 +212,7 @@
         },
         "subject_id": {
           "name": "subject_id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": false,
           "notNull": true
         },
@@ -226,7 +224,7 @@
         },
         "room_id": {
           "name": "room_id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": false,
           "notNull": true
         },
@@ -380,7 +378,7 @@
         },
         "class_id": {
           "name": "class_id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": false,
           "notNull": true
         }
@@ -423,10 +421,9 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
         "name": {
           "name": "name",
@@ -481,7 +478,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": false,
           "notNull": true
         }
@@ -532,7 +529,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": false,
           "notNull": true
         },
@@ -590,10 +587,9 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
         "code": {
           "name": "code",
@@ -654,7 +650,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": false,
           "notNull": true
         },
@@ -712,10 +708,9 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "varchar(24)",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
         "card_id": {
           "name": "card_id",

@@ -152,21 +152,24 @@ export abstract class ClassSectionService {
     return { classSectionId: id }
   }
 
-  static async delete(query: ClassSectionModel.OneQuery) {
-    const { id } = query
+  static async delete(query: ClassSectionModel.DeleteQuery) {
+    const { id, code } = query
 
-    const [existingClassSection] = await db
+    const whereClauses = []
+    if (id) whereClauses.push(eq(classSections.id, id))
+    if (code) whereClauses.push(eq(classSections.code, code))
+
+    const existingClassSection = await db
       .select()
       .from(classSections)
-      .where(eq(classSections.id, id))
-      .limit(1)
-    if (!existingClassSection)
+      .where(and(...whereClauses))
+    if (existingClassSection.length === 0)
       throw new TRPCError({
         code: 'NOT_FOUND',
         message: 'Class section not found',
       })
 
-    await db.delete(classSections).where(eq(classSections.id, id))
+    await db.delete(classSections).where(and(...whereClauses))
     this.caches.clear()
 
     return { classSectionId: id }

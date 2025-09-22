@@ -21,6 +21,6 @@ export const classSectionRouter = createTRPCRouter({
     .mutation(({ input }) => ClassSectionService.update(input)),
 
   delete: adminProcedure
-    .input(ClassSectionModel.oneQuery)
+    .input(ClassSectionModel.deleteQuery)
     .mutation(({ input }) => ClassSectionService.delete(input)),
 })

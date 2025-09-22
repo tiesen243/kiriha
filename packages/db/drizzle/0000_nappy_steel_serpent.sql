@@ -4,14 +4,14 @@ CREATE TYPE "public"."role" AS ENUM('admin', 'teacher', 'student');--> statement
 CREATE TABLE "accounts" (
 	"provider" varchar(255) NOT NULL,
 	"account_id" varchar(255) NOT NULL,
-	"user_id" uuid NOT NULL,
+	"user_id" varchar(24) NOT NULL,
 	"password" varchar(255),
 	CONSTRAINT "accounts_provider_account_id_pk" PRIMARY KEY("provider","account_id")
 );
 --> statement-breakpoint
 CREATE TABLE "attendances" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"class_id" uuid NOT NULL,
+	"id" varchar(24) PRIMARY KEY NOT NULL,
+	"class_id" varchar(24) NOT NULL,
 	"student_id" varchar(10) NOT NULL,
 	"status" "attendance_status" NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -19,11 +19,11 @@ CREATE TABLE "attendances" (
 );
 --> statement-breakpoint
 CREATE TABLE "class_sections" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" varchar(24) PRIMARY KEY NOT NULL,
 	"code" varchar(12) NOT NULL,
-	"subject_id" uuid NOT NULL,
+	"subject_id" varchar(24) NOT NULL,
 	"teacher_id" varchar(10) NOT NULL,
-	"room_id" uuid NOT NULL,
+	"room_id" varchar(24) NOT NULL,
 	"status" "class_section_status" DEFAULT 'waiting' NOT NULL,
 	"date" date NOT NULL,
 	"start_time" time with time zone NOT NULL,
@@ -34,12 +34,12 @@ CREATE TABLE "class_sections" (
 --> statement-breakpoint
 CREATE TABLE "enrollments" (
 	"student_id" varchar(10) NOT NULL,
-	"class_id" uuid NOT NULL,
+	"class_id" varchar(24) NOT NULL,
 	CONSTRAINT "enrollments_student_id_class_id_pk" PRIMARY KEY("student_id","class_id")
 );
 --> statement-breakpoint
 CREATE TABLE "rooms" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" varchar(24) PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"capacity" integer NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -49,18 +49,18 @@ CREATE TABLE "rooms" (
 CREATE TABLE "sessions" (
 	"token" varchar(255) PRIMARY KEY NOT NULL,
 	"expires" timestamp with time zone NOT NULL,
-	"user_id" uuid NOT NULL
+	"user_id" varchar(24) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "students" (
 	"id" varchar(10) PRIMARY KEY NOT NULL,
-	"user_id" uuid NOT NULL,
+	"user_id" varchar(24) NOT NULL,
 	"enrolled_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "students_userId_unique" UNIQUE("user_id")
 );
 --> statement-breakpoint
 CREATE TABLE "subjects" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" varchar(24) PRIMARY KEY NOT NULL,
 	"code" varchar(7) NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"credit" integer NOT NULL,
@@ -71,13 +71,13 @@ CREATE TABLE "subjects" (
 --> statement-breakpoint
 CREATE TABLE "teachers" (
 	"id" varchar(10) PRIMARY KEY NOT NULL,
-	"user_id" uuid NOT NULL,
+	"user_id" varchar(24) NOT NULL,
 	"hired_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "teachers_userId_unique" UNIQUE("user_id")
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" varchar(24) PRIMARY KEY NOT NULL,
 	"card_id" varchar(32),
 	"role" "role" DEFAULT 'student',
 	"name" varchar(255) NOT NULL,

@@ -10,7 +10,6 @@ export function useMediaQuery(query: string) {
     mql.addEventListener(
       'change',
       () => {
-        if (abortController.signal.aborted) return
         setMatches(mql.matches)
       },
       { signal: abortController.signal },

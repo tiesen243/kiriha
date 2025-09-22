@@ -8,7 +8,7 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/pg-core'
 
-import { generateSubjectCode, generateUserCode } from './utils'
+import { createId, generateSubjectCode, generateUserCode } from './utils'
 
 /**
  * ENUMS
@@ -40,7 +40,7 @@ const updatedAt = timestamp({ mode: 'date', withTimezone: true })
  * --------------------------------------------------------------
  */
 export const users = pgTable('users', (t) => ({
-  id: t.uuid().primaryKey().defaultRandom().notNull(),
+  id: t.varchar({ length: 24 }).primaryKey().$defaultFn(createId).notNull(),
   cardId: t.varchar({ length: 32 }).unique(),
 
   role: roleEnums().default('student'),
@@ -76,7 +76,7 @@ export const students = pgTable(
       .primaryKey()
       .notNull(),
     userId: t
-      .uuid()
+      .varchar({ length: 24 })
       .unique()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
@@ -99,7 +99,7 @@ export const teachers = pgTable(
       .primaryKey()
       .notNull(),
     userId: t
-      .uuid()
+      .varchar({ length: 24 })
       .unique()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
@@ -125,7 +125,7 @@ export const accounts = pgTable(
     provider: t.varchar({ length: 255 }).notNull(),
     accountId: t.varchar({ length: 255 }).notNull(),
     userId: t
-      .uuid()
+      .varchar({ length: 24 })
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
     password: t.varchar({ length: 255 }),
@@ -146,7 +146,7 @@ export const sessions = pgTable(
     token: t.varchar({ length: 255 }).primaryKey().notNull(),
     expires: t.timestamp({ mode: 'date', withTimezone: true }).notNull(),
     userId: t
-      .uuid()
+      .varchar({ length: 24 })
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
   }),
@@ -167,7 +167,7 @@ export const sessionRelations = relations(sessions, ({ one }) => ({
  * - Attendances track student presence in classes with unique constraints to prevent duplicates
  */
 export const rooms = pgTable('rooms', (t) => ({
-  id: t.uuid().primaryKey().defaultRandom().notNull(),
+  id: t.varchar({ length: 24 }).primaryKey().$defaultFn(createId).notNull(),
   name: t.varchar({ length: 255 }).notNull(),
   capacity: t.integer().notNull(),
   createdAt,
@@ -179,7 +179,7 @@ export const roomsRelations = relations(rooms, ({ many }) => ({
 }))
 
 export const subjects = pgTable('subjects', (t) => ({
-  id: t.uuid().primaryKey().defaultRandom().notNull(),
+  id: t.varchar({ length: 24 }).primaryKey().$defaultFn(createId).notNull(),
   code: t
     .varchar({ length: 7 })
     .$defaultFn(() => generateSubjectCode())
@@ -198,10 +198,10 @@ export const subjectRelations = relations(subjects, ({ many }) => ({
 export const classSections = pgTable(
   'class_sections',
   (t) => ({
-    id: t.uuid().primaryKey().defaultRandom().notNull(),
+    id: t.varchar({ length: 24 }).primaryKey().$defaultFn(createId).notNull(),
     code: t.varchar({ length: 12 }).notNull(),
     subjectId: t
-      .uuid()
+      .varchar({ length: 24 })
       .notNull()
       .references(() => subjects.id, { onDelete: 'restrict' }),
     teacherId: t
@@ -209,7 +209,7 @@ export const classSections = pgTable(
       .notNull()
       .references(() => teachers.id, { onDelete: 'restrict' }),
     roomId: t
-      .uuid()
+      .varchar({ length: 24 })
       .notNull()
       .references(() => rooms.id, { onDelete: 'restrict' }),
     status: classStatusEnums().default('waiting').notNull(),
@@ -251,7 +251,7 @@ export const enrollments = pgTable(
       .notNull()
       .references(() => students.id, { onDelete: 'cascade' }),
     classId: t
-      .uuid()
+      .varchar({ length: 24 })
       .notNull()
       .references(() => classSections.id, { onDelete: 'cascade' }),
   }),
@@ -274,9 +274,9 @@ export const enrollmentRelations = relations(enrollments, ({ one }) => ({
 export const attendances = pgTable(
   'attendances',
   (t) => ({
-    id: t.uuid().primaryKey().defaultRandom().notNull(),
+    id: t.varchar({ length: 24 }).primaryKey().$defaultFn(createId).notNull(),
     classId: t
-      .uuid()
+      .varchar({ length: 24 })
       .notNull()
       .references(() => classSections.id, { onDelete: 'cascade' }),
     studentId: t

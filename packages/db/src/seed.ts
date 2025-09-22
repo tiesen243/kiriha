@@ -3,13 +3,17 @@ import { seed } from 'drizzle-seed'
 import { Password } from '@kiriha/auth'
 import { env } from '@kiriha/validators/env'
 
-import { db, eq, generateSubjectCode } from '.'
+import { createId, db, eq, generateSubjectCode } from '.'
 import { accounts, rooms, students, subjects, teachers, users } from './schema'
 
 async function main() {
   await seed(db, { rooms, subjects, users }).refine((f) => ({
     subjects: {
       columns: {
+        id: f.valuesFromArray({
+          values: Array.from({ length: 100 }, () => createId()),
+          isUnique: true,
+        }),
         code: f.valuesFromArray({
           values: Array.from({ length: 100 }, () => generateSubjectCode()),
         }),
@@ -20,6 +24,10 @@ async function main() {
     },
     rooms: {
       columns: {
+        id: f.valuesFromArray({
+          values: Array.from({ length: 100 }, () => createId()),
+          isUnique: true,
+        }),
         name: f.valuesFromArray({
           values: Array.from({ length: 100 }, () => {
             const building = String.fromCharCode(
@@ -35,6 +43,7 @@ async function main() {
             )
             return `${building}${floor}${room}`
           }),
+          isUnique: true,
         }),
         capacity: f.int({ minValue: 20, maxValue: 100 }),
       },
@@ -42,7 +51,13 @@ async function main() {
     },
     users: {
       columns: {
+        id: f.valuesFromArray({
+          values: Array.from({ length: 100 }, () => createId()),
+          isUnique: true,
+        }),
+        cardId: f.default({ defaultValue: null }),
         name: f.fullName(),
+        image: f.default({ defaultValue: null }),
         email: f.email(),
         role: f.valuesFromArray({
           values: [

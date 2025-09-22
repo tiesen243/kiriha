@@ -67,6 +67,12 @@ export namespace ClassSectionModel {
     date: z.iso.date().optional(),
   })
   export type UpdateBody = z.infer<typeof updateBody>
+
+  export const deleteQuery = z.object({
+    id: z.cuid2().optional(),
+    code: z.string().length(12).optional(),
+  })
+  export type DeleteQuery = z.infer<typeof deleteQuery>
 }
 
 export const dayOfWeekMap: Record<

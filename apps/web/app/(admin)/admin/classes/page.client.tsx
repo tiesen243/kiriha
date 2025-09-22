@@ -1,7 +1,9 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import type { RouterOutputs } from '@kiriha/api'
+import { Button } from '@kiriha/ui/button'
 import {
   Table,
   TableBody,
@@ -28,15 +30,7 @@ export const ClassTable: React.FC = () => {
           <LoadingRows cells={7} />
         ) : (
           data.classes.map((c) => (
-            <TableRow key={c.code} className='h-14'>
-              <TableCell>{c.code}</TableCell>
-              <TableCell>{c.subject}</TableCell>
-              <TableCell>{c.status}</TableCell>
-              <TableCell>{c.teachers.join(', ')}</TableCell>
-              <TableCell>{c.rooms.join(', ')}</TableCell>
-              <TableCell>{c.startDate?.toLocaleDateString('en-GB')}</TableCell>
-              <TableCell>{c.endDate?.toLocaleDateString('en-GB')}</TableCell>
-            </TableRow>
+            <ClassTableRow key={c.code} classSection={c} />
           ))
         )}
       </TableBody>
@@ -52,8 +46,51 @@ const ClassTableHeader: React.FC = () => (
       <TableHead>Status</TableHead>
       <TableHead>Teachers</TableHead>
       <TableHead>Rooms</TableHead>
+      <TableHead>Total Sections</TableHead>
       <TableHead>Start Date</TableHead>
       <TableHead>End Date</TableHead>
+      <TableCell>Actions</TableCell>
     </TableRow>
   </TableHeader>
 )
+
+const ClassTableRow: React.FC<{
+  classSection: RouterOutputs['classSection']['all']['classes'][number]
+}> = ({ classSection }) => {
+  const trpc = useTRPC()
+  const queryClient = useQueryClient()
+
+  const { mutate, isPending } = useMutation({
+    ...trpc.classSection.delete.mutationOptions(),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(trpc.classSection.all.queryFilter({}))
+    },
+  })
+
+  return (
+    <TableRow key={classSection.code} className='h-14'>
+      <TableCell>{classSection.code}</TableCell>
+      <TableCell>{classSection.subject}</TableCell>
+      <TableCell>{classSection.status}</TableCell>
+      <TableCell>{classSection.teachers.join(', ')}</TableCell>
+      <TableCell>{classSection.rooms.join(', ')}</TableCell>
+      <TableCell>{classSection.totalSection}</TableCell>
+      <TableCell>
+        {classSection.startDate?.toLocaleDateString('en-GB')}
+      </TableCell>
+      <TableCell>{classSection.endDate?.toLocaleDateString('en-GB')}</TableCell>
+      <TableCell>
+        <Button
+          size='sm'
+          variant='destructive'
+          disabled={isPending}
+          onClick={() => {
+            mutate({ code: classSection.code })
+          }}
+        >
+          Delete
+        </Button>
+      </TableCell>
+    </TableRow>
+  )
+}

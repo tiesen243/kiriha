@@ -7,6 +7,12 @@ import { useQueryClient } from '@tanstack/react-query'
 import type { RouterOutputs } from '@kiriha/api'
 import { Button } from '@kiriha/ui/button'
 import {
+  Combobox,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxTrigger,
+} from '@kiriha/ui/combobox'
+import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -87,21 +93,22 @@ export const CreateClassForm: React.FC<{
         render={({ field }) => (
           <div className='grid gap-2'>
             <FormLabel>Subject</FormLabel>
-            <Select value={field.value} onValueChange={field.onChange}>
+            <Combobox value={field.value} onValueChange={field.onChange}>
               <FormControl name={field.name}>
-                <SelectTrigger className='w-full'>
-                  <SelectValue placeholder='Select a subject' />
-                </SelectTrigger>
+                <ComboboxTrigger
+                  className='w-full'
+                  placeholder='Select a subject'
+                />
               </FormControl>
 
-              <SelectContent>
+              <ComboboxContent>
                 {subjects.map((subject) => (
-                  <SelectItem key={subject.id} value={subject.id}>
+                  <ComboboxItem key={subject.id} value={subject.id}>
                     {subject.name}
-                  </SelectItem>
+                  </ComboboxItem>
                 ))}
-              </SelectContent>
-            </Select>
+              </ComboboxContent>
+            </Combobox>
             <FormMessage />
           </div>
         )}
@@ -113,24 +120,25 @@ export const CreateClassForm: React.FC<{
         render={({ field }) => (
           <div className='grid gap-2'>
             <FormLabel>Teacher</FormLabel>
-            <Select value={field.value} onValueChange={field.onChange}>
+            <Combobox value={field.value} onValueChange={field.onChange}>
               <FormControl name={field.name}>
-                <SelectTrigger className='w-full'>
-                  <SelectValue placeholder='Select a teacher' />
-                </SelectTrigger>
+                <ComboboxTrigger
+                  className='w-full'
+                  placeholder='Select a teacher'
+                />
               </FormControl>
 
-              <SelectContent>
+              <ComboboxContent>
                 {teachers.map((teacher) => (
-                  <SelectItem
+                  <ComboboxItem
                     key={teacher.id}
                     value={String(teacher.teacherId)}
                   >
                     {teacher.name}
-                  </SelectItem>
+                  </ComboboxItem>
                 ))}
-              </SelectContent>
-            </Select>
+              </ComboboxContent>
+            </Combobox>
             <FormMessage />
           </div>
         )}
@@ -142,21 +150,22 @@ export const CreateClassForm: React.FC<{
         render={({ field }) => (
           <div className='grid gap-2'>
             <FormLabel>Room</FormLabel>
-            <Select value={field.value} onValueChange={field.onChange}>
+            <Combobox value={field.value} onValueChange={field.onChange}>
               <FormControl name={field.name}>
-                <SelectTrigger className='w-full'>
-                  <SelectValue placeholder='Select a room' />
-                </SelectTrigger>
+                <ComboboxTrigger
+                  className='w-full'
+                  placeholder='Select a room'
+                />
               </FormControl>
 
-              <SelectContent>
+              <ComboboxContent>
                 {rooms.map((room) => (
-                  <SelectItem key={room.id} value={room.id}>
+                  <ComboboxItem key={room.id} value={room.id}>
                     {room.name}
-                  </SelectItem>
+                  </ComboboxItem>
                 ))}
-              </SelectContent>
-            </Select>
+              </ComboboxContent>
+            </Combobox>
             <FormMessage />
           </div>
         )}
