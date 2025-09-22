@@ -4,13 +4,18 @@ import type { SubjectModel } from '@kiriha/validators/subject'
 import { and, db, desc, eq, ilike } from '@kiriha/db'
 import { subjects } from '@kiriha/db/schema'
 
+import type { CacheEntry } from '../trpc'
+
 export abstract class SubjectService {
+  static CACHE_TTL = 30 * 60 * 1000 // 30 minutes
+  static caches = new Map<string, CacheEntry<unknown>>()
+
   static async findMany(query: SubjectModel.ManyQuery) {
     const { search, page, limit } = query
     const cacheKey = JSON.stringify(['findMany', query])
 
-    const cached = this.caches.get(cacheKey) as typeof result | undefined
-    if (cached) return cached
+    const cached = this.caches.get(cacheKey) as CacheEntry<typeof result>
+    if (cached && cached.expires > Date.now()) return cached.result
 
     const whereClauses = []
     if (search) whereClauses.push(ilike(subjects.name, search))
@@ -37,7 +42,7 @@ export abstract class SubjectService {
       page,
       totalPages: Math.ceil(total / limit),
     }
-    this.caches.set(cacheKey, result)
+    this.caches.set(cacheKey, { result, expires: Date.now() + this.CACHE_TTL })
     return result
   }
 
@@ -45,8 +50,8 @@ export abstract class SubjectService {
     const { id } = query
     const cacheKey = JSON.stringify(['findOne', query])
 
-    const cached = this.caches.get(cacheKey) as typeof result | undefined
-    if (cached) return cached
+    const cached = this.caches.get(cacheKey) as CacheEntry<typeof result>
+    if (cached && cached.expires > Date.now()) return cached.result
 
     const [subject] = await db
       .select({
@@ -64,7 +69,7 @@ export abstract class SubjectService {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Subject not found' })
 
     const result = { subject }
-    this.caches.set(cacheKey, result)
+    this.caches.set(cacheKey, { result, expires: Date.now() + this.CACHE_TTL })
     return result
   }
 
@@ -118,6 +123,4 @@ export abstract class SubjectService {
 
     return { subjectId: id }
   }
-
-  static caches = new Map<string, unknown>()
 }

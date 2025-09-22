@@ -4,13 +4,18 @@ import type { RoomModel } from '@kiriha/validators/room'
 import { and, db, desc, eq, ilike } from '@kiriha/db'
 import { rooms } from '@kiriha/db/schema'
 
+import type { CacheEntry } from '../trpc'
+
 export abstract class RoomService {
+  static CACHE_TTL = 30 * 60 * 1000
+  static caches = new Map<string, CacheEntry<unknown>>()
+
   static async findMany(query: RoomModel.ManyQuery) {
     const { search, page, limit } = query
     const cacheKey = JSON.stringify(['findMany', query])
 
-    const cached = this.caches.get(cacheKey) as typeof result | undefined
-    if (cached) return cached
+    const cached = this.caches.get(cacheKey) as CacheEntry<typeof result>
+    if (cached && cached.expires > Date.now()) return cached.result
 
     const whereClauses = []
     if (search) whereClauses.push(ilike(rooms.name, search))
@@ -36,7 +41,7 @@ export abstract class RoomService {
       page: page,
       totalPages: Math.ceil(totalItems / query.limit),
     }
-    this.caches.set(cacheKey, result)
+    this.caches.set(cacheKey, { result, expires: Date.now() + this.CACHE_TTL })
     return result
   }
 
@@ -44,8 +49,8 @@ export abstract class RoomService {
     const { id } = query
     const cacheKey = JSON.stringify(['findOne', query])
 
-    const cached = this.caches.get(cacheKey) as typeof result | undefined
-    if (cached) return cached
+    const cached = this.caches.get(cacheKey) as CacheEntry<typeof result>
+    if (cached && cached.expires > Date.now()) return cached.result
 
     const [room] = await db
       .select()
@@ -56,7 +61,7 @@ export abstract class RoomService {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Room not found' })
 
     const result = { room }
-    this.caches.set(cacheKey, result)
+    this.caches.set(cacheKey, { result, expires: Date.now() + this.CACHE_TTL })
     return result
   }
 
@@ -113,6 +118,4 @@ export abstract class RoomService {
 
     return { roomId: id }
   }
-
-  static caches = new Map<string, unknown>()
 }

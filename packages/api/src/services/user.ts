@@ -4,13 +4,18 @@ import type { UserModel } from '@kiriha/validators/user'
 import { and, db, desc, eq, ilike, or } from '@kiriha/db'
 import { students, teachers, users } from '@kiriha/db/schema'
 
+import type { CacheEntry } from '../trpc'
+
 export abstract class UserService {
+  static CACHE_TTL = 30 * 60 * 1000 // 30 minutes
+  static caches = new Map<string, CacheEntry<unknown>>()
+
   static async findMany(query: UserModel.ManyQuery) {
     const { search, role, limit, page } = query
     const cacheKey = JSON.stringify(['findMany', query])
 
-    const cached = this.caches.get(cacheKey) as typeof result | undefined
-    if (cached) return cached
+    const cached = this.caches.get(cacheKey) as CacheEntry<typeof result>
+    if (cached && cached.expires > Date.now()) return cached.result
 
     const whereClauses = []
     if (search)
@@ -51,7 +56,7 @@ export abstract class UserService {
       page,
       totalPages: Math.ceil(total / limit),
     }
-    this.caches.set(cacheKey, result)
+    this.caches.set(cacheKey, { result, expires: Date.now() + this.CACHE_TTL })
     return result
   }
 
@@ -59,8 +64,8 @@ export abstract class UserService {
     const { id } = query
     const cacheKey = JSON.stringify(['findOne', query])
 
-    const cached = this.caches.get(cacheKey) as typeof result | undefined
-    if (cached) return cached
+    const cached = this.caches.get(cacheKey) as CacheEntry<typeof result>
+    if (cached && cached.expires > Date.now()) return cached.result
 
     const [user] = await db
       .select({
@@ -86,7 +91,7 @@ export abstract class UserService {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' })
 
     const result = { user }
-    this.caches.set(cacheKey, result)
+    this.caches.set(cacheKey, { result, expires: Date.now() + this.CACHE_TTL })
     return result
   }
 
@@ -147,6 +152,4 @@ export abstract class UserService {
 
     return { userId: id }
   }
-
-  static caches = new Map<string, unknown>()
 }

@@ -4,6 +4,8 @@ import SuperJSON from 'superjson'
 import { auth, validateSessionToken } from '@kiriha/auth'
 import { db } from '@kiriha/db'
 
+type CacheEntry<T> = { result: T; expires: number } | undefined
+
 const isomorphicGetSession = async (headers: Headers) => {
   const authToken = headers.get('Authorization') ?? null
   if (authToken) return validateSessionToken(authToken)
@@ -64,6 +66,7 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   return next()
 })
 
+export type { CacheEntry }
 export {
   createCallerFactory,
   createTRPCContext,
